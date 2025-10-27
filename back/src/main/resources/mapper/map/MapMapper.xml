@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.map.MapMapper">
+    <select id="getWaterwayMap" resultType="java.lang.Object">
+
+        select data from waterway where x = #{x} and y = #{y} and zoom = #{zoom}
+    </select>
+
+    <select id="getWaterwayMark" resultType="java.lang.Object">
+        select data from mark where x = #{x} and y = #{y} and zoom = #{zoom}
+    </select>
+
+    <select id="getRasterTile" resultType="java.lang.Object">
+        select data from raster_tiles where x = #{x} and y = #{y} and zoom = #{zoom} and name = #{name}
+    </select>
+</mapper>

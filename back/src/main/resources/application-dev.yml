@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    default:
+      jdbc-url: jdbc:sqlite:E:/monitor/main.db
+      driver-class-name: org.sqlite.JDBC
+    shp:
+      jdbc-url: jdbc:postgresql://localhost:5432/shp_dataset?stringtype=unspecified
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: 123456
+    ship:
+      jdbc-url: jdbc:sqlite:E:/monitor/resources/ais.db
+      driver-class-name: org.sqlite.JDBC
+    waterway:
+      jdbc-url: jdbc:sqlite:E:/monitor/resources/waterway.db
+      driver-class-name: org.sqlite.JDBC
+    map:
+      jdbc-url: jdbc:sqlite:E:/monitor/resources/map.db
+      driver-class-name: org.sqlite.JDBC
+
+#D:/UyNauhL/Assignments/monitor_data/monitor
+
+# 记得手动修改pythonDir
+pythonDir: "E:/monitor/pythonDir/"
+baseDir: E:/monitor/resources/raw/
+avatarDir: E:/monitor/resources/avatar/
+tempDir: E:/monitor/temp/
+visualDir: E:/monitor/resources/visual/
+pgPath: D:/App/postgresql/bin/
+mapDir: E:/monitor/resources/map/
+resourceDir: E:/monitor/resources/
+analysisDir: E:/monitor/resources/analysis/
+analysisParameterDir: E:/monitor/resources/analysisParameter/
+projectDir: E:/monitor/project/
+
+meteorologyUrl: https://weather.cma.cn/api/map/alarm
+meteorologyPngUrl:
+  http://data.cma.cn/dataGis/static/ultra/img/gis/disasterWarning/
+
+waterLevelAddress:
+  http://172.21.212.116:9999
+
+AISUrl:
+  https://www.cjienc.cn/rest/es/getBoxShips?left={0}&bottom={1}&right={2}&top={3}
+AISListUrl:
+  https://www.cjienc.cn/rest/es/getBoxShips?from={0}&name={1}&size={2}
+
+fileViewUrl:
+  http://localhost:8012/fileUpload
+
+LocalMap:
+  http://127.0.0.1:3000

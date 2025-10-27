@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.waterway.WaterwayMapper">
+    <resultMap id="AnchorMap" type="nnu.edu.back.pojo.Anchor">
+        <id property="id" column="id"/>
+        <result property="anchorName" column="mdmc"/>
+        <result property="waterwayName" column="sdcd"/>
+        <result property="type" column="type"/>
+        <result property="longitude" column="zbjd"/>
+        <result property="latitude" column="zbwd"/>
+        <result property="picture" column="tpdz"/>
+        <result property="management" column="gldw"/>
+        <result property="hdHdlyName" column="hd_hdly_name"/>
+        <result property="tyAnbName" column="ty_anb_name"/>
+        <result property="usage" column="yt"/>
+        <result property="buildTime" column="jcsj"/>
+        <result property="hdlc" column="hdlc"/>
+        <result property="region" column="qyfw" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="hdHdly" column="hd_hdly"/>
+        <result property="tyAnb" column="ty_anb"/>
+        <result property="sdName" column="sd_name"/>
+    </resultMap>
+
+    <resultMap id="BridgeMap" type="nnu.edu.back.pojo.Bridge">
+        <id property="id" column="id"/>
+        <result property="bridgeAreaRange" column="syfw"/>
+        <result property="bridgeCulvertMarker" column="qhb"/>
+        <result property="navRulesWaterRoutes" column="hlhf"/>
+        <result property="navAssessmentApproval" column="hppfwj"/>
+        <result property="maritimeAdminAgency" column="hsgljg"/>
+        <result property="bridgeAttributes" column="qlsx"/>
+        <result property="designNavRepTypeFleet" column="sjthdbcx"/>
+        <result property="bridgePillarLights" column="qzd"/>
+        <result property="sectionNavRepTypeFleet" column="qdthdbcx"/>
+        <result property="bridgeActiveCollisionPrev" column="qlzdfzss"/>
+        <result property="bridgeOpMgmtUnit" column="qlyxgldw"/>
+        <result property="openingDate" column="tcsj"/>
+        <result property="bridgePassiveCollisionPrev" column="qlbdfzss"/>
+        <result property="avgDailyCrossFlow" column="rjdmll"/>
+        <result property="bridgeAreaVideoFacilities" column="qqspss"/>
+        <result property="waterTrafficSafetyMgmt" column="glzd"/>
+        <result property="riverFacilitiesInArea" column="lhss"/>
+        <result property="other" column="qt"/>
+        <result property="mainNavSpanNumber" column="zthkbh"/>
+        <result property="anchorageBerthingArea" column="tbq"/>
+        <result property="crossRiverFacilities" column="khss"/>
+        <result property="waterNavMarksArrangement" column="hbbz"/>
+        <result property="smallVesselNavSpanNumber" column="xlthkbh"/>
+        <result property="polygon" column="polygon" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="navMaintenanceUnit" column="yhdw"/>
+        <result property="bridgeName" column="qlmc"/>
+        <result property="name" column="name"/>
+        <result property="mainNavPierCollisionPrev" column="fznl"/>
+    </resultMap>
+    
+    <resultMap id="BuoyMap" type="nnu.edu.back.pojo.Buoy">
+        <id property="id" column="id"/>
+        <result property="picture" column="hbtlpz"/>
+        <result property="photo" column="hbphoto"/>
+        <result property="color" column="bsys"/>
+        <result property="des" column="dbys"/>
+        <result property="name" column="hbmc"/>
+        <result property="shape" column="hbxz"/>
+        <result property="longitude" column="jdwz_84jd"/>
+        <result property="latitude" column="jdwz_84wd" />
+        <result property="waterway" column="sshd" />
+        <result property="noMeaning" column="zxaqjl" />
+    </resultMap>
+
+    <resultMap id="ParkMap" type="nnu.edu.back.pojo.Park">
+        <id property="id" column="id"/>
+        <result property="name" column="mc"/>
+        <result property="hdHdly" column="hd_hdly"/>
+        <result property="hdHdlyName" column="hd_hdly_name"/>
+        <result property="hdlc" column="hdlc"/>
+        <result property="tyAnb" column="ty_anb"/>
+        <result property="tyAnbName" column="ty_anb_name"/>
+        <result property="type" column="type"/>
+        <result property="width" column="kd"/>
+        <result property="usage" column="yt"/>
+        <result property="longitude" column="zbjd"/>
+        <result property="latitude" column="zbwd"/>
+        <result property="picture" column="tpdz"/>
+        <result property="waterwayId" column="sd_id"/>
+        <result property="waterwayName" column="sd_name"/>
+        <result property="management" column="gldw"/>
+        <result property="region" column="qyfw" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="shipWay" column="sdcd"/>
+    </resultMap>
+
+    <resultMap id="OtherMap" type="nnu.edu.back.pojo.Other">
+        <id property="id" column="id"/>
+        <result property="name" column="mc"/>
+        <result property="hdHdly" column="hd_hdly"/>
+        <result property="hdHdlyName" column="hd_hdly_name"/>
+        <result property="hdlc" column="hdlc"/>
+        <result property="type" column="type"/>
+        <result property="longitude" column="zbjd"/>
+        <result property="latitude" column="zbwd"/>
+        <result property="picture" column="tpdz"/>
+        <result property="waterwayId" column="sd_id"/>
+        <result property="waterwayName" column="sd_name"/>
+        <result property="management" column="gldw"/>
+        <result property="region" column="qyfw" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="shipWay" column="sdcd"/>
+        <result property="hxbz" column="hxbz"/>
+        <result property="zyb" column="zyb"/>
+    </resultMap>
+
+    <resultMap id="StationMap" type="nnu.edu.back.pojo.Station">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="nameEn" column="name_en"/>
+        <result property="keys" column="keys" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="keysCn" column="keys_cn" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="longitude" column="lon"/>
+        <result property="latitude" column="lat"/>
+        <result property="type" column="type"/>
+        <result property="startTime" column="start_time" typeHandler="nnu.edu.back.common.utils.JsonObjectTypeHandler"/>
+        <result property="prediction" column="prediction"/>
+    </resultMap>
+
+
+    <select id="getAllAnchorInfo" resultMap="AnchorMap">
+        select * from anchor
+    </select>
+
+    <select id="pageQueryAnchor" resultMap="AnchorMap">
+        select * from anchor
+        <if test="keyword != ''">
+            where mdmc like #{keyword} or yt like #{keyword}
+        </if>
+        limit #{size} offset #{start}
+    </select>
+
+    <select id="countAnchor" resultType="java.lang.Integer">
+        select count(*) from anchor
+        <if test="keyword != ''">
+            where mdmc like #{keyword} or yt like #{keyword}
+        </if>
+    </select>
+
+    <select id="getAllBridgeInfo" resultMap="BridgeMap">
+        select * from bridges
+    </select>
+
+    <select id="pageQueryBridge" resultMap="BridgeMap">
+        select * from bridges
+        <if test="keyword != ''">
+            where qlmc like #{keyword} or qlsx like #{keyword}
+        </if>
+        limit #{size} offset #{start}
+    </select>
+
+    <select id="countBridge" resultType="java.lang.Integer">
+        select count(*) from bridges
+        <if test="keyword != ''">
+            where qlmc like #{keyword} or qlsx like #{keyword}
+        </if>
+    </select>
+
+    <select id="getBuoyByBox" resultMap="BuoyMap">
+        select * from buoy where jdwz_84jd &gt; #{left} and jdwz_84jd &lt; #{right} and jdwz_84wd &gt; #{bottom} and jdwz_84wd &lt; #{top}
+    </select>
+
+    <select id="pageQueryBuoy" resultMap="BuoyMap">
+        select * from buoy
+        <if test="keyword != ''">
+            where hbmc like #{keyword} or sshd like #{keyword}
+        </if>
+        limit #{size} offset #{start}
+    </select>
+
+    <select id="countBuoy" resultType="java.lang.Integer">
+        select count(*) from buoy
+        <if test="keyword != ''">
+            where hbmc like #{keyword} or sshd like #{keyword}
+        </if>
+    </select>
+
+    <select id="getAllParkInfo" resultMap="ParkMap">
+        select * from park
+    </select>
+
+    <select id="pageQueryPark" resultMap="ParkMap">
+        select * from (select * from park where json_extract(qyfw, '$.type') != 'point')
+        <if test="keyword != ''">
+            where mc like #{keyword} or yt like #{keyword}
+        </if>
+        limit #{size} offset #{start}
+    </select>
+
+    <select id="countPark" resultType="java.lang.Integer">
+        select count(*) from (select * from park where json_extract(qyfw, '$.type') != 'point')
+        <if test="keyword != ''">
+            where mc like #{keyword} or yt like #{keyword}
+        </if>
+    </select>
+
+    <select id="getStationByBox" resultMap="StationMap">
+        select * from stations where lon &gt; #{left} and lon &lt; #{right} and lat &gt; #{bottom} and lat &lt; #{top}
+    </select>
+
+    <select id="pageQueryStation" resultMap="StationMap">
+        select * from stations
+        <if test="keyword != ''">
+            where name like #{keyword}
+        </if>
+        limit #{size} offset #{start}
+    </select>
+
+    <select id="countStation" resultType="java.lang.Integer">
+        select count(*) from stations
+        <if test="keyword != ''">
+            where name like #{keyword}
+        </if>
+    </select>
+
+    <select id="getAllStation" resultMap="StationMap">
+        select * from stations
+    </select>
+
+    <select id="getPhoto" resultType="java.lang.Object">
+        select file from photos where file_name = #{fileName}
+    </select>
+
+    <select id="getPredictionStation" resultMap="StationMap">
+        select * from stations where prediction = 1
+    </select>
+
+    <select id="getStationInfoByStationId" resultMap="StationMap">
+        select * from stations where id = #{stationId}
+    </select>
+</mapper>

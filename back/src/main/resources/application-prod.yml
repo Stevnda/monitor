@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    default:
+      jdbc-url: jdbc:sqlite:D:/monitor/data/main.db
+      driver-class-name: org.sqlite.JDBC
+    shp:
+      jdbc-url: jdbc:postgresql://localhost:5432/shp_dataset?stringtype=unspecified
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: 123
+    ship:
+      jdbc-url: jdbc:sqlite:D:/monitor/data/resources/ais.db
+      driver-class-name: org.sqlite.JDBC
+    waterway:
+      jdbc-url: jdbc:sqlite:D:/monitor/data/resources/waterway.db
+      driver-class-name: org.sqlite.JDBC
+    map:
+      jdbc-url: jdbc:sqlite:D:/monitor/data/resources/map.db
+      driver-class-name: org.sqlite.JDBC
+
+pythonDir: "E:/monitor/pythonDir/"
+baseDir: D:/monitor/data/resources/raw/
+avatarDir: D:/monitor/data/resources/avatar/
+tempDir: D:/monitor/data/temp/
+visualDir: D:/monitor/data/resources/visual/
+pgPath: D:/app/postgresql/bin/
+mapDir: D:/monitor/data/resources/map/
+resourceDir: D:/monitor/data/resources/
+analysisDir: D:/monitor/data/resources/analysis/
+analysisParameterDir: D:/monitor/data/resources/analysisParameter/
+projectDir: D:/monitor/data/project/
+
+meteorologyUrl: https://weather.cma.cn/api/map/alarm
+meteorologyPngUrl:
+  http://data.cma.cn/dataGis/static/ultra/img/gis/disasterWarning/
+
+waterLevelAddress:
+  https://geomodeling.njnu.edu.cn/waterLevel
+
+AISUrl:
+  https://www.cjienc.cn/rest/es/getBoxShips?left={0}&bottom={1}&right={2}&top={3}
+AISListUrl:
+  https://www.cjienc.cn/rest/es/getBoxShips?from={0}&name={1}&size={2}
+
+fileViewUrl:
+  http://localhost:8012/fileUpload

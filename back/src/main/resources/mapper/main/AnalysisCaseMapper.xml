@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.AnalysisCaseMapper">
+    <resultMap id="AnalysisCaseMap" type="nnu.edu.back.pojo.AnalysisCase">
+        <id property="id" column="id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="creator" column="creator"/>
+        <result property="createTime" column="create_time"/>
+        <result property="avatar" column="avatar"/>
+        <result property="layerManage" column="layer_manage" typeHandler="nnu.edu.back.common.utils.ListTypeHandler"/>
+    </resultMap>
+
+    <resultMap id="FilesMap" type="nnu.edu.back.pojo.Files">
+        <id property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="address" column="address"/>
+        <result property="size" column="size"/>
+        <result property="visualType" column="visual_type"/>
+        <result property="visualId" column="visual_id"/>
+    </resultMap>
+
+    <insert id="addAnalysis">
+        insert into analysis_case values(#{analysisCase.id}, #{analysisCase.projectName}, #{analysisCase.creator}, datetime('now','localtime'), #{analysisCase.avatar}, #{analysisCase.layerManage})
+    </insert>
+
+    <select id="fuzzyQuery" resultMap="AnalysisCaseMap">
+        select * from analysis_case
+        where creator = #{email}
+        <if test="keyword != ''">
+            and project_name like #{keyword}
+        </if>
+        order by create_time asc
+        limit #{size} offset #{start}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from analysis_case where creator = #{email}
+        <if test="keyword != ''">
+            and project_name like #{keyword}
+        </if>
+    </select>
+
+    <select id="getAnalysisInfo" resultMap="AnalysisCaseMap">
+        select * from analysis_case where id = #{id}
+    </select>
+
+    <update id="updateLayer">
+        update analysis_case set layer_manage = #{layers, typeHandler=nnu.edu.back.common.utils.ListTypeHandler} where id = #{id}
+    </update>
+
+    <select id="getLayersInfo" resultMap="FilesMap">
+        select * from files where id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateBaseInfo">
+        update analysis_case set project_name = #{analysisCase.projectName}, create_time = datetime('now','localtime'), avatar = #{analysisCase.avatar}
+        where id = #{analysisCase.id}
+    </update>
+
+    <delete id="deleteAnalysis">
+        delete from analysis_case where id = #{id}
+    </delete>
+</mapper>

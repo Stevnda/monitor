@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.AnalysisResultMapper">
+    <resultMap id="AnalysisResultMap" type="nnu.edu.back.pojo.AnalysisResult">
+        <id property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="address" column="address"/>
+        <result property="createTime" column="create_time"/>
+        <result property="creator" column="creator"/>
+        <result property="visualType" column="visual_type"/>
+        <result property="visualId" column="visual_id"/>
+        <result property="caseId" column="case_id"/>
+    </resultMap>
+
+    <select id="getAnalysisResult" resultMap="AnalysisResultMap">
+        select * from analysis_result where #{caseId} = case_id
+    </select>
+
+    <insert id="addAnalysisResult">
+        insert into analysis_result values (#{analysisResult.id}, #{analysisResult.fileName}, #{analysisResult.address}, datetime('now','localtime'), #{analysisResult.creator}, #{analysisResult.visualType}, #{analysisResult.visualId}, #{analysisResult.caseId})
+    </insert>
+
+    <delete id="delAnalysisResult">
+        delete from analysis_result where id = #{id}
+    </delete>
+
+    <delete id="delAnalysisResultByCaseId">
+        delete from analysis_result where case_id = #{caseId}
+    </delete>
+
+    <select id="getInfoById" resultMap="AnalysisResultMap">
+        select * from analysis_result where id = #{id}
+    </select>
+
+    <update id="rename">
+        update analysis_result set file_name = #{name} where id = #{id}
+    </update>
+</mapper>

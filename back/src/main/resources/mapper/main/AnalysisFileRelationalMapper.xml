@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.AnalysisFileRelationalMapper">
+    <resultMap id="AnalysisFileRelationalMap" type="nnu.edu.back.pojo.AnalysisFileRelational">
+        <result property="caseId" column="case_id"/>
+        <result property="fileId" column="file_id"/>
+        <result property="dataListId" column="data_list_id"/>
+    </resultMap>
+
+    <insert id="addRecord">
+        insert into analysis_file_relational values
+        <foreach collection="list" separator="," item="item">
+            (#{id}, #{item.fileId}, #{item.dataListId})
+        </foreach>
+    </insert>
+
+    <select id="getData" resultType="java.util.Map">
+        select file_id as "fileId", data_list_id as "dataListId", file_name as "fileName", name as "dataListName", visual_type as "visualType", visual_id as "visualId" from analysis_file_relational a, files f, data_list d
+        where a.case_id = #{caseId} and f.id = a.file_id and d.id = a.data_list_id
+    </select>
+
+    <delete id="delData">
+        delete from analysis_file_relational where case_id = #{caseId} and file_id = #{fileId} and data_list_id = #{dataListId}
+    </delete>
+
+    <delete id="delByCaseId">
+        delete from analysis_file_relational where case_id = #{case_id}
+    </delete>
+</mapper>

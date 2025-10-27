@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkfront"]=self["webpackChunkfront"]||[]).push([[46],{7046:function(e,t,n){n.r(t),n.d(t,{default:function(){return u}});var r=n(3396),a=n(4870),f={__name:"StormPrediction",setup(e){const t=(0,a.iH)(null),n=window.location.hostname;let f="";return(0,r.bv)((()=>{f=`http://${n}:5173`,t.value.src=f})),(e,n)=>((0,r.wg)(),(0,r.iD)("iframe",{class:"iframe",ref_key:"iframeRef",ref:t},null,512))}},o=n(89);const s=(0,o.Z)(f,[["__scopeId","data-v-6e7ada34"]]);var u=s}}]);
+//# sourceMappingURL=46.eb69ca2d.js.map

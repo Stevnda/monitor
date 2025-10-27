@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.DataListMapper">
+    <resultMap id="DataListMap" type="nnu.edu.back.pojo.DataList">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="location" column="location" typeHandler="nnu.edu.back.common.utils.ListTypeHandler"/>
+        <result property="description" column="description"/>
+        <result property="tags" column="tags" typeHandler="nnu.edu.back.common.utils.ListTypeHandler"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="download" column="download"/>
+        <result property="watch" column="watch"/>
+        <result property="avatar" column="avatar"/>
+        <result property="provider" column="provider"/>
+        <result property="range" column="range"/>
+        <result property="type" column="type"/>
+        <result property="providerPhone" column="providerPhone"/>
+        <result property="providerEmail" column="providerEmail"/>
+        <result property="providerAddress" column="providerAddress"/>
+        <result property="detail" column="detail"/>
+        <result property="timeStamp" column="timeStamp"/>
+    </resultMap>
+
+    <insert id="addDataList">
+        insert into data_list values(#{dataList.id}, #{dataList.name}, #{dataList.location, typeHandler=nnu.edu.back.common.utils.ListTypeHandler}, #{dataList.description}, #{dataList.tags, typeHandler=nnu.edu.back.common.utils.ListTypeHandler},
+                                     datetime('now','localtime'), datetime('now','localtime'), 0, 0, #{dataList.avatar}, #{dataList.provider}, #{dataList.range}, #{dataList.type}, #{dataList.providerPhone},
+                                     #{dataList.providerEmail}, #{dataList.providerAddress}, #{dataList.detail}, #{dataList.timeStamp})
+
+    </insert>
+
+    <update id="updateDataList">
+        update data_list
+        set name = #{dataList.name}, location = #{dataList.location, typeHandler=nnu.edu.back.common.utils.ListTypeHandler}, description = #{dataList.description}, tags = #{dataList.tags, typeHandler=nnu.edu.back.common.utils.ListTypeHandler},
+        update_time = datetime('now','localtime'), provider = #{dataList.provider}, range = #{dataList.range}, type = #{dataList.type}, provider_phone = #{dataList.providerPhone}, provider_email = #{dataList.providerEmail},
+        provider_address = #{dataList.providerAddress}, detail = #{dataList.detail}, time_stamp = #{dataList.timeStamp}, avatar = #{dataList.avatar}
+        where id = #{dataList.id}
+    </update>
+
+    <select id="getFileInfo" resultMap="DataListMap">
+        select * from data_list where id = #{id}
+    </select>
+
+    <update id="addWatchCount">
+        update data_list set watch = watch + 1 where id = #{id}
+    </update>
+
+    <update id="addDownloadCount">
+        update data_list set download = download + 1 where id = #{id}
+    </update>
+
+    <select id="fuzzyQuery" resultMap="DataListMap">
+        <if test="type != 'special'">
+            select * from data_list
+            <if test="keyword != '' and type != ''">
+                where(name like #{keyword} or description like #{keyword} or tags like #{keyword}) and data_list.type = #{type}
+            </if>
+            <if test="keyword != '' and type == ''">
+                where (name like #{keyword} or description like #{keyword} or tags like #{keyword})
+            </if>
+            <if test="type != '' and keyword == ''">
+                where data_list.type = #{type}
+            </if>
+            <if test="flag">
+                order by ${property} asc, data_list.id asc
+                limit #{size} offset #{start};
+            </if>
+            <if test="!flag">
+                order by ${property} desc, data_list.id desc
+                limit #{size} offset #{start};
+            </if>
+        </if>
+        <if test="type == 'special'">
+            select * from (select * from data_list where id in (select * from special_data)) as temp_list
+            <if test="keyword != ''">
+                where (temp_list.name like #{keyword} or temp_list.description like #{keyword} or temp_list.tags like #{keyword})
+            </if>
+            <if test="flag">
+                order by ${property} asc, temp_list.id asc
+                limit #{size} offset #{start};
+            </if>
+            <if test="!flag">
+                order by ${property} desc, temp_list.id desc
+                limit #{size} offset #{start};
+            </if>
+        </if>
+    </select>
+
+    <select id="countFuzzyQuery" resultType="java.lang.Integer">
+        <if test="type != 'special'">
+            select count(*) from data_list
+            <if test="keyword != '' and type != ''">
+                where(name like #{keyword} or description like #{keyword} or tags like #{keyword}) and data_list.type = #{type}
+            </if>
+            <if test="keyword != '' and type == ''">
+                where (name like #{keyword} or description like #{keyword} or tags like #{keyword})
+            </if>
+            <if test="type != '' and keyword == ''">
+                where data_list.type = #{type}
+            </if>
+
+        </if>
+        <if test="type == 'special'">
+            select count(*) from (select * from data_list where id in (select * from special_data)) as temp_list
+            <if test="keyword != ''">
+                where (temp_list.name like #{keyword} or temp_list.description like #{keyword} or temp_list.tags like #{keyword})
+            </if>
+        </if>
+    </select>
+
+    <delete id="deleteById">
+        delete from data_list where id = #{id}
+    </delete>
+
+    <select id="getSimilarData" resultType="java.util.Map">
+        select id, name
+        from data_list
+        where  type = #{type} and id != #{id}
+        order by watch desc, download desc
+            limit #{size} offset #{start};
+    </select>
+
+    <select id="getSimilarCount" resultType="java.lang.Integer">
+        select count(*) from data_list where type = #{type}
+    </select>
+
+    <select id="getHot" resultType="java.util.Map">
+        select id, name as "dataListName" from data_list order by watch desc limit #{size} offset 0;
+    </select>
+
+    <select id="getRandom" resultType="java.util.Map">
+        select id, name from data_list order by RANDOM() limit #{size}
+    </select>
+</mapper>

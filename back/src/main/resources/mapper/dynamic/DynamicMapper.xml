@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.dynamic.DynamicMapper">
+    <resultMap id="LocusMap" type="nnu.edu.back.pojo.Locus">
+        <result property="time" column="time"/>
+        <result property="name" column="name"/>
+        <result property="locationX" column="location_x"/>
+        <result property="locationY" column="location_y"/>
+        <result property="speed" column="ave_v"/>
+    </resultMap>
+    <resultMap id="SectionMap" type="nnu.edu.back.pojo.Section">
+        <id property="name" column="name"/>
+        <result property="startLon" column="start_lon"/>
+        <result property="startLat" column="start_lat"/>
+        <result property="endLon" column="end_lon"/>
+        <result property="endLat" column="end_lat"/>
+        <result property="angle" column="angle"/>
+    </resultMap>
+
+    <resultMap id="FluxMap" type="nnu.edu.back.pojo.Flux">
+        <result property="time" column="time"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="value" column="value"/>
+        <result property="tableId" column="table_id"/>
+    </resultMap>
+
+    <resultMap id="SubstrateMap" type="nnu.edu.back.pojo.Substrate">
+        <result property="time" column="time"/>
+        <result property="location" column="location"/>
+        <result property="type" column="type"/>
+        <result property="soil" column="soil"/>
+        <result property="level" column="level" typeHandler="nnu.edu.back.common.utils.JsonArrayTypeHandler"/>
+    </resultMap>
+
+    <resultMap id="SandTransportMap" type="nnu.edu.back.pojo.SandTransport">
+        <result property="time" column="time"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="value" column="value"/>
+    </resultMap>
+
+    <select id="getLocusPoint" resultType="java.lang.String">
+        select distinct name from locus_result
+    </select>
+
+    <select id="getLocusTable" resultMap="LocusMap">
+        select * from locus_result where name = #{name}
+    </select>
+
+    <select id="getAllSection" resultMap="SectionMap">
+        select * from section
+    </select>
+
+    <select id="getDistanceAndElevationByName" resultType="java.util.HashMap">
+        select distance, elevation from section_elevation_result where section_name = #{sectionName} order by number ASC
+    </select>
+
+    <select id="getTableIdList" resultType="java.lang.String">
+        select table_id from flux_result group by table_id
+    </select>
+
+    <select id="getTypeByTableId" resultType="java.lang.String">
+        select distinct type from flux_result where table_id = #{tableId}
+    </select>
+
+    <select id="getTimeListByTableId" resultType="java.lang.String">
+        select distinct time from flux_result where table_id = #{tableId} order by time ASC
+    </select>
+
+    <select id="getNameListByTableId" resultType="java.lang.String">
+        select distinct name from flux_result where table_id = #{tableId}
+    </select>
+
+    <select id="getFluxValueByTableIdAndName" resultType="java.lang.Double">
+        select ifnull(value, 0) from flux_result where table_id = #{tableId} and name = #{name} order by time ASC
+    </select>
+
+    <select id="getAllSubstrate" resultMap="SubstrateMap">
+        select * from substrate_result order by time ASC
+    </select>
+
+    <select id="getSandTransportTableList" resultType="java.lang.String">
+        select distinct table_id from sand_transport_result
+    </select>
+
+    <select id="getSandTransportTypeByTableId" resultType="java.lang.String">
+        select distinct type from sand_transport_result where table_id = #{tableId}
+    </select>
+
+    <select id="getSandTransportTimeListByTableId" resultType="java.lang.String">
+        select distinct time from sand_transport_result where table_id = #{tableId} order by time ASC
+    </select>
+
+    <select id="getSandTransportNameListByTableId" resultType="java.lang.String">
+        select distinct name from sand_transport_result where table_id = #{tableId}
+    </select>
+
+    <select id="getSandTransportValueByTableIdAndName" resultType="java.lang.Double">
+        select ifnull(value, 0) from sand_transport_result where table_id = #{tableId} and name = #{name} order by time ASC
+    </select>
+
+    <select id="getSectionSegment" resultType="java.lang.String">
+        select distance from v_d_result where name = #{name} and type = #{type} group by distance order by cast(replace(distance, "S", "") as integer) ASC
+    </select>
+
+    <select id="getSpeedOrientationNameAndType" resultType="java.util.HashMap">
+        select name, type from v_d_result group by name, type
+    </select>
+
+    <select id="getTime" resultType="java.lang.String">
+        select distinct time from v_d_result where name = #{name} and type = #{type} order by time ASC
+    </select>
+
+    <select id="getSpeedByNameAndTypeAndDistance" resultType="java.lang.Double">
+        select ifnull(ave_v, 0) from v_d_result where name = #{name} and type = #{type} and distance = #{distance} order by cast(replace(distance, "S", "") as integer) ASC, time ASC
+    </select>
+
+    <select id="getOrientationByNameAndType" resultType="java.lang.Double">
+        select ifnull(ave_d, 0) from v_d_result where name = #{name} and type = #{type} and distance = #{distance} order by cast(replace(distance, "S", "") as integer) ASC, time ASC
+    </select>
+
+    <select id="getSandContentClass" resultType="java.lang.String">
+        select name from sand_content_result group by name
+    </select>
+
+    <select id="getSandContentTime" resultType="java.lang.String">
+        select time from sand_content_result where name = #{name} order by time ASC
+    </select>
+
+    <select id="getSandContentValue" resultType="java.lang.Double">
+        select ave_value from sand_content_result where name = #{name} order by time ASC
+    </select>
+
+    <select id="test" resultType="java.util.HashMap">
+        ${sql}
+    </select>
+</mapper>

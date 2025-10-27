@@ -1,0 +1,530 @@
+<template>
+  <div class="upload-resource">
+    <div class="main">
+      <div class="head">
+        <strong>创建新的共享文件条目</strong>
+      </div>
+      <div class="des">
+        请确保以下内容的<strong>真实性</strong>及<strong>完整性</strong>，以便管理员审核通过！审核工作预计在7个工作日内完成
+      </div>
+      <el-divider />
+      <el-form
+        label-width="130px"
+        :model="form"
+        :rules="fileRules"
+        ref="fileRef"
+      >
+        <el-form-item label="条目名：" prop="name">
+          <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="条目描述：" prop="description">
+          <el-input
+            v-model="form.description"
+            type="textarea"
+            resize="none"
+            :rows="3"
+          />
+        </el-form-item>
+        <el-form-item label="标签：" prop="tags">
+          <el-tag
+            v-for="tag in form.tags"
+            :key="tag"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag)"
+          >
+            {{ tag }}
+          </el-tag>
+          <el-input
+            v-if="inputVisible"
+            ref="InputRef"
+            class="tag-input"
+            v-model="inputValue"
+            @keyup.enter="handleInputConfirm"
+            @blur="handleInputConfirm"
+          />
+          <el-button v-else @click="showInput"> + New Tag </el-button>
+        </el-form-item>
+
+        <el-form-item label="条目封面：">
+          <avatar-upload
+            @returnPicture="returnPicture"
+            :pictureName="form.avatar"
+            ref="avatarUpload"
+          ></avatar-upload>
+        </el-form-item>
+      </el-form>
+      <el-divider />
+      <el-form
+        label-width="130px"
+        :model="form"
+        ref="metaRef"
+        :rules="metaRules"
+      >
+        <el-form-item label="数据提供方：" prop="provider">
+          <el-input v-model="form.provider" />
+        </el-form-item>
+        <el-form-item label="联系电话：">
+          <el-input v-model="form.providerPhone" />
+        </el-form-item>
+        <el-form-item label="联系邮箱：">
+          <el-input v-model="form.providerEmail" />
+        </el-form-item>
+        <el-form-item label="联系地址：">
+          <el-input v-model="form.providerAddress" />
+        </el-form-item>
+        <el-form-item label="原始数据类型：" prop="type">
+          <el-select
+            v-model="form.type"
+            placeholder="数据类型"
+            size="large"
+            style="width: 300px"
+          >
+            <el-option-group
+              v-for="(group, groupIndex) in classList"
+              :key="groupIndex"
+              :label="group.lable"
+            >
+              <el-option
+                v-for="(item, index) in group.value"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-option-group>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="绑定水位站：" v-if="form.type === '实时水位'">
+          <el-select
+            v-model="stationId"
+            placeholder="绑定水位站"
+            size="large"
+            style="width: 300px"
+          >
+            <el-option
+              v-for="(item, index) in stationList"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="数据时间：">
+          <el-input v-model="form.timeStamp" />
+        </el-form-item>
+        <el-form-item label="空间范围描述：">
+          <el-input v-model="form.range" />
+        </el-form-item>
+
+        <el-form-item label="空间范围选取：">
+          <div ref="container" class="container"></div>
+        </el-form-item>
+
+        <el-form-item label="数据绑定：" v-if="form.type !== '实时水位'">
+          <data-bind @changeData="changeData" ref="dataBind" />
+        </el-form-item>
+
+        <el-form-item label="其他描述：">
+          <div style="border: 1px solid #ccc">
+            <Toolbar
+              style="border-bottom: 1px solid #ccc"
+              :editor="editorRef"
+              :defaultConfig="toolbarConfig"
+              mode="default"
+            />
+            <Editor
+              style="height: 320px; overflow-y: hidden"
+              v-model="form.detail"
+              :defaultConfig="editorConfig"
+              mode="default"
+              @onCreated="handleCreated"
+            />
+          </div>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="btn">
+      <el-button type="success" plain @click="commit(fileRef, metaRef)"
+        >修改</el-button
+      >
+    </div>
+    <page-copyright />
+  </div>
+</template>
+
+<script lang="ts">
+import {
+  defineComponent,
+  reactive,
+  ref,
+  shallowRef,
+  onBeforeUnmount,
+  onMounted,
+  nextTick,
+  watch,
+} from "vue";
+import "@wangeditor/editor/dist/css/style.css"; // 引入 css
+import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import { IDomEditor } from "@wangeditor/editor";
+import { ElInput } from "element-plus";
+import {
+  getFileInfo,
+  findFiles,
+  updateDataList,
+  getAllStation,
+  updateRelational,
+} from "@/api/request";
+import { notice } from "@/utils/common";
+import type { FormInstance } from "element-plus";
+import AvatarUpload from "@/components/upload/UploadAvatar.vue";
+import DataBind from "@/components/admin/DataBind.vue";
+import PageCopyright from "@/layout/PageCopyright.vue";
+import mapBoxGl, { AnySourceData } from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import { classList } from "@/common-config";
+import { DataListType, StationType } from "@/type";
+import router from "@/router";
+import { styleLight } from "@/utils/mapStyleJson";
+export default defineComponent({
+  components: {
+    Editor,
+    Toolbar,
+    AvatarUpload,
+    DataBind,
+    PageCopyright,
+  },
+  setup() {
+    const defaultProps = {
+      children: "children",
+      label: "label",
+    };
+    const container = ref<HTMLElement>();
+    const dataBind = ref();
+    const inputValue = ref("");
+    const inputVisible = ref(false);
+    const InputRef = ref<InstanceType<typeof ElInput>>();
+    const avatarUpload = ref<{ updateImage: (image: string) => {} }>();
+    const form: Omit<
+      DataListType,
+      "createTime" | "updateTime" | "download" | "watch"
+    > = reactive({
+      id: "",
+      name: "",
+      location: [],
+      description: "",
+      tags: [],
+      avatar: "",
+
+      provider: "",
+      range: "",
+      detail: "",
+      type: "",
+      providerPhone: "",
+      providerEmail: "",
+      providerAddress: "",
+      timeStamp: "",
+    });
+
+    const stationId = ref("");
+    const stationList = ref<StationType[]>([]);
+
+    const editorRef = shallowRef<IDomEditor>();
+    const toolbarConfig = {};
+    const editorConfig = {
+      scroll: true,
+      autoFocus: true,
+    };
+    const fileList = ref<string[]>([]);
+    const fileRef = ref<HTMLElement | undefined>();
+    const metaRef = ref<HTMLElement | undefined>();
+
+    let map: mapBoxGl.Map;
+
+    const handleCreated = (editor: any) => {
+      editorRef.value = editor; // 记录 editor 实例，重要！
+    };
+
+    const changeData = (
+      val: {
+        id: string;
+        name: string;
+        folder: boolean;
+        size: string[];
+        flag: boolean;
+        parentId: string;
+      }[]
+    ) => {
+      fileList.value = [];
+      val.forEach((item) => {
+        fileList.value.push(item.id);
+      });
+    };
+
+    const commit = async (
+      formEl1: FormInstance | undefined,
+      formEl2: FormInstance | undefined
+    ) => {
+      if (!formEl1 || !formEl2) return;
+      await formEl1.validate(async (valid1, fields) => {
+        await formEl2.validate(async (valid2) => {
+          if (valid1 && valid2) {
+            const res = await updateDataList(form);
+            if (res && res.code === 0) {
+              await updateRelational({
+                dataListId: router.currentRoute.value.params.id as string,
+                fileIdList: fileList.value,
+              });
+              notice("success", "成功", "数据修改成功");
+            }
+          }
+        });
+      });
+    };
+
+    const handleClose = (tag: string) => {
+      form.tags.splice(form.tags.indexOf(tag), 1);
+    };
+
+    const handleInputConfirm = () => {
+      if (inputValue.value) {
+        form.tags.push(inputValue.value);
+      }
+      inputVisible.value = false;
+      inputValue.value = "";
+    };
+
+    const showInput = () => {
+      inputVisible.value = true;
+      nextTick(() => {
+        InputRef.value!.input!.focus();
+      });
+    };
+
+    const returnPicture = (val: string) => {
+      console.log(val);
+      form.avatar = val;
+    };
+
+    const fileRules = reactive({
+      name: [{ required: true, message: "条目名不得为空！", trigger: "blur" }],
+      tags: [{ required: true, message: "标签不得为空！", trigger: "blur" }],
+    });
+    const metaRules = reactive({
+      provider: [
+        { required: true, message: "数据提供方不得为空！", trigger: "blur" },
+      ],
+      type: [
+        { required: true, message: "数据类型不得为空！", trigger: "blur" },
+      ],
+      getOnline: [
+        { required: true, message: "数据获取方式不得为空！", trigger: "blur" },
+      ],
+    });
+
+    //自定义绘制面
+    const polygonDraw = new MapboxDraw({
+      controls: {
+        combine_features: false,
+        uncombine_features: false,
+        trash: true,
+        point: false,
+        line_string: false,
+      },
+    });
+    const initMap = () => {
+      container.value!.style.background = styleLight.background;
+      map = new mapBoxGl.Map({
+        container: container.value as HTMLElement,
+        // style: "mapbox://styles/johnnyt/cl9miecpn001t14rspop38nyk",
+        style: styleLight.styleJson as any,
+        center: [121.18, 31.723],
+        zoom: 8,
+        accessToken:
+          "pk.eyJ1Ijoiam9obm55dCIsImEiOiJja2xxNXplNjYwNnhzMm5uYTJtdHVlbTByIn0.f1GfZbFLWjiEayI6hb_Qvg",
+      });
+
+      //绘制事件
+      const updateArea = function (e: any) {
+        if (e.type === "draw.create") {
+          if (polygonDraw.getAll().features.length > 1) {
+            polygonDraw.delete(polygonDraw.getAll().features[0].id as string);
+          }
+          form.location = [] as string[];
+          (e.features[0].geometry.coordinates[0] as number[][]).forEach(
+            (item) => {
+              form.location.push(item[0].toString());
+              form.location.push(item[1].toString());
+            }
+          );
+        } else if (e.type === "draw.update") {
+          form.location = [] as string[];
+          (e.features[0].geometry.coordinates[0] as number[][]).forEach(
+            (item) => {
+              form.location.push(item[0].toString());
+              form.location.push(item[1].toString());
+            }
+          );
+        } else if (e.type === "draw.delete") {
+          form.location = [] as string[];
+        }
+      };
+      map.addControl(polygonDraw, "top-right");
+      map.on("draw.create", updateArea);
+      map.on("draw.delete", updateArea);
+      map.on("draw.update", updateArea);
+    };
+
+    const getCoordinates = (location: string[]) => {
+      const coordinates = [];
+      for (let i = 0; i + 1 < location.length; i = i + 2) {
+        coordinates.push([
+          parseFloat(location[i]),
+          parseFloat(location[i + 1]),
+        ]);
+      }
+      return coordinates;
+    };
+
+    // 组件销毁时，也及时销毁编辑器
+    onBeforeUnmount(() => {
+      const editor = editorRef.value;
+      if (editor == null) return;
+      editor.destroy();
+    });
+
+    const initData = (id: string) => {
+      Promise.all([getFileInfo(id), findFiles(id)]).then((res) => {
+        if (res[0] && res[1] && res[0].code === 0 && res[1].code === 0) {
+          form.id = res[0].data.id;
+          form.avatar = `/monitor/visual/getAvatar/${res[0].data.avatar}`;
+          form.description = res[0].data.description;
+          form.range = res[0].data.range;
+          form.tags = res[0].data.tags;
+          form.timeStamp = res[0].data.timeStamp;
+          form.type = res[0].data.type;
+          form.detail = res[0].data.detail;
+          form.location = res[0].data.location;
+          form.name = res[0].data.name;
+          form.provider = res[0].data.provider;
+          form.providerAddress = res[0].data.providerAddress;
+          form.providerEmail = res[0].data.providerEmail;
+          form.providerPhone = res[0].data.providerPhone;
+          polygonDraw.deleteAll();
+          if (form.location.length > 0) {
+            polygonDraw.add({
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Polygon",
+                coordinates: [getCoordinates(form.location)],
+              },
+            });
+          }
+          if (form.type !== "实时水位") {
+            const files = res[1].data;
+            dataBind.value.updateData(files);
+            avatarUpload.value?.updateImage(form.avatar);
+          } else {
+            stationId.value = res[1].data[0].stationId;
+          }
+        } else router.push({ name: "404" });
+      });
+    };
+
+    watch(
+      () => router.currentRoute.value.params.id,
+      (newVal, oldVal) => {
+        if (newVal) {
+          initData(newVal as string);
+        }
+      }
+    );
+
+    const initStationList = async () => {
+      const res = await getAllStation();
+      if (res && res.code === 0) {
+        stationList.value = res.data;
+      }
+    };
+
+    onMounted(async () => {
+      initMap();
+      await initStationList();
+
+      initData(router.currentRoute.value.params.id as string);
+    });
+
+    return {
+      avatarUpload,
+      container,
+      form,
+      defaultProps,
+      inputValue,
+      inputVisible,
+      InputRef,
+      classList,
+      editorRef,
+      toolbarConfig,
+      editorConfig,
+      handleCreated,
+      commit,
+      fileRules,
+      metaRules,
+      fileRef,
+      metaRef,
+      stationList,
+      stationId,
+      changeData,
+      dataBind,
+      handleClose,
+      handleInputConfirm,
+      showInput,
+      returnPicture,
+    };
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.upload-resource {
+  .main {
+    width: 900px;
+    margin: 0 auto;
+    .head {
+      height: 50px;
+      font-size: 20px;
+      line-height: 50px;
+    }
+
+    .el-form {
+      .container {
+        height: 400px;
+        width: 100%;
+      }
+      .el-tag {
+        margin-right: 10px;
+        margin-bottom: 5px;
+      }
+      .tag-input {
+        width: 100px;
+      }
+    }
+  }
+
+  .btn {
+    text-align: center;
+    height: 80px;
+  }
+  :deep().el-dialog {
+    .el-dialog__header {
+      padding: 0;
+    }
+    .el-dialog__body {
+      padding: 0;
+    }
+  }
+}
+</style>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.VisualFileMapper">
+    <resultMap id="VisualFileMap" type="nnu.edu.back.pojo.VisualFile">
+        <id property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="view" column="view"/>
+    </resultMap>
+
+    <select id="findById" resultMap="VisualFileMap">
+        select * from visual_file where id = #{id}
+    </select>
+
+    <insert id="addVisualFile">
+        insert into visual_file values (#{visualFile.id}, #{visualFile.fileName}, #{visualFile.type}, #{visualFile.content}, #{visualFile.view})
+    </insert>
+
+    <select id="getView" resultType="java.lang.String">
+        select view from visual_file where id = #{id}
+    </select>
+</mapper>

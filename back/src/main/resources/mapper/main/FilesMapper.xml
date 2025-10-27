@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.FilesMapper">
+    <resultMap id="FilesMap" type="nnu.edu.back.pojo.Files">
+        <id property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="address" column="address"/>
+        <result property="size" column="size"/>
+        <result property="visualType" column="visual_type"/>
+        <result property="visualId" column="visual_id"/>
+        <result property="parentId" column="parent_id"/>
+    </resultMap>
+
+    <resultMap id="FolderMap" type="nnu.edu.back.pojo.Folder">
+        <id property="id" column="id"/>
+        <result property="folderName" column="folder_name"/>
+        <result property="parentId" column="parent_id"/>
+    </resultMap>
+
+    <resultMap id="VisualFileMap" type="nnu.edu.back.pojo.VisualFile">
+        <id property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="view" column="view"/>
+    </resultMap>
+
+    <resultMap id="UploadRecordMap" type="nnu.edu.back.pojo.UploadRecord">
+        <id property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="size" column="size"/>
+    </resultMap>
+
+    <insert id="addFile">
+        insert into files values(#{files.id}, #{files.fileName}, #{files.size}, #{files.address}, #{files.visualType}, #{files.visualId}, #{files.parentId})
+    </insert>
+
+    <delete id="batchDelete">
+        delete from files
+        <foreach collection="list" item="item" open="where id in (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="findInfoListById" resultMap="FilesMap">
+        select * from files
+        <foreach collection="list" item="item" open="where id in (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateVisualIdAndType">
+        update files set visual_id = #{visualId}, visual_type = #{type} where id = #{id}
+    </update>
+
+    <select id="findInfoById" resultMap="FilesMap">
+        select * from files where id = #{id}
+    </select>
+
+    <select id="findFolderByParentId" resultMap="FolderMap">
+        select * from folder where parent_id = #{parentId}
+    </select>
+
+    <select id="findFilesByParentId" resultMap="FilesMap">
+        select * from files where parent_id = #{parentId}
+    </select>
+
+    <select id="findFolderById" resultMap="FolderMap">
+        select * from folder where id = #{id}
+    </select>
+
+    <insert id="addFolder">
+        insert into folder values(#{folder.id}, #{folder.folderName}, #{folder.parentId})
+    </insert>
+
+    <select id="getVisualFileByVisualId" resultMap="VisualFileMap">
+        select * from visual_file where id = #{visualId}
+    </select>
+
+    <delete id="recursionDeleteFile">
+        with recursive temp_folder as (
+            select * from folder
+            <foreach collection="list" item="item" open="where id in (" close=")" separator=",">
+                #{item}
+            </foreach>
+            union
+            select f.* from folder f
+            inner join temp_folder on temp_folder.id = f.parent_id
+        ) delete from files where parent_id in (select id from temp_folder);
+    </delete>
+
+    <delete id="recursionDeleteFolder">
+        with recursive temp_folder as (
+        select * from folder
+        <foreach collection="list" item="item" open="where id in (" close=")" separator=",">
+            #{item}
+        </foreach>
+        union
+        select f.* from folder f
+        inner join temp_folder on temp_folder.id = f.parent_id
+        ) delete from folder where id in (select id from temp_folder);
+    </delete>
+
+    <select id="getUploadRecord" resultMap="UploadRecordMap">
+        select * from upload_record order by upload_time ASC
+    </select>
+
+    <insert id="addUploadRecord">
+        insert into upload_record values (#{uploadRecord.id}, #{uploadRecord.fileName}, #{uploadRecord.uploadTime}, #{uploadRecord.size})
+    </insert>
+
+    <delete id="delAllRecord">
+        delete from upload_record
+    </delete>
+
+    <delete id="delRecord">
+        delete from upload_record where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkfront"]=self["webpackChunkfront"]||[]).push([[297],{6297:function(n,r,t){t.r(r),t.d(r,{default:function(){return s}});var u=t(3396);function e(n,r,t,e,f,a){return(0,u.wg)(),(0,u.iD)("div",null,"注册")}var f=(0,u.aZ)({setup(){}}),a=t(89);const c=(0,a.Z)(f,[["render",e]]);var s=c}}]);
+//# sourceMappingURL=297.78eb0366.js.map

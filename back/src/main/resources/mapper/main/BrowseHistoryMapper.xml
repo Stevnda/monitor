@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.main.BrowseHistoryMapper">
+    <resultMap id="BrowseHistoryMap" type="nnu.edu.back.pojo.BrowseHistory">
+        <id property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="browseTime" column="browse_time" />
+        <result property="dataId" column="data_id" />
+    </resultMap>
+    <insert id="addHistory">
+        insert into browse_history values (#{history.id}, #{history.userId}, datetime('now','localtime'), #{history.dataId});
+    </insert>
+
+    <select id="getDataGroupByDate" resultType="java.util.HashMap">
+        select strftime('%Y-%m-%d', browse_time) as date, count(*) as sum from browse_history where data_id = #{dataId} and browse_time >= #{date} GROUP by date;
+    </select>
+</mapper>
