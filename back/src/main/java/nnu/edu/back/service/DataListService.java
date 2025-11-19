@@ -23,15 +23,11 @@ public interface DataListService {
 
     DataList getFileInfo(String id);
 
-
     void addWatchCount(String id, String email);
 
     Map<String, Object> fuzzyQuery(int page, int size, String keyword, String property, Boolean flag, String type);
 
-
-
     List<Map<String, Object>> getHot(int size);
-
 
     void downloadAll(String email, String id, HttpServletRequest request, HttpServletResponse response);
 
