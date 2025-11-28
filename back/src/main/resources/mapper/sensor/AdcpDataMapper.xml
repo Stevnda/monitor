@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="nnu.edu.back.dao.sensor.AdcpDataMapper">
     <resultMap id="AdcpData" type="nnu.edu.back.pojo.SensorAdcp">
@@ -18,8 +18,22 @@
         <result property="checksum" column="checksum"/>
     </resultMap>
 
-    <select id="getAdcpDataByTimeRange" resultMap="AdcpData">
-        SELECT *
+    <select id="getAdcpDataByTimeRange" resultType="nnu.edu.back.pojo.SensorAdcp">
+        SELECT
+            id,
+            timestamp as deviceTimestamp,
+            header_data as headerData,
+            fixed_leader as fixedLeader,
+            variable_leader as variableLeader,
+            velocity_data as velocityData,
+            correlation_data as correlationData,
+            echo_intensity as echoIntensity,
+            percent_good as percentGood,
+            status_data as statusData,
+            bottom_track as bottomTrack,
+            ambient_sound as ambientSound,
+            ism_data as ismData,
+            checksum
         FROM adcp_data
         WHERE timestamp &gt;= #{startTime}
           AND timestamp &lt;= #{endTime}
@@ -28,5 +42,4 @@
     <select id="getAllAdcpData" resultMap="AdcpData">
         SELECT * FROM adcp_data
     </select>
-
 </mapper>

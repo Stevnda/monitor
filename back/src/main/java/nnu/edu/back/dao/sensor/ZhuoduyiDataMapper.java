@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ZhuoduyiDataMapper {
-    List<SensorZhuoduyi> getZhuoduyiDataByTimeRange(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<SensorZhuoduyi> getZhuoduyiDataByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<SensorZhuoduyi> getAllZhuoduyiData();
 }

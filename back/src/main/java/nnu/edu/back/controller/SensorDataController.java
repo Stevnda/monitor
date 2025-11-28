@@ -20,14 +20,9 @@ public class SensorDataController {
     @Autowired
     SensorDataService sensorDataService;
     
-    @RequestMapping(value = "/adcp", method = RequestMethod.GET)
-    public JsonResult getAdcpData(
-            @RequestParam String startTime,
-            @RequestParam String endTime) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date start = sdf.parse(startTime);
-        Date end = sdf.parse(endTime);
-        return ResultUtils.success(sensorDataService.getAdcpDataByTimeRange(start, end));
+    @RequestMapping(value = "/adcp/{startTime}/{endTime}", method = RequestMethod.GET)
+    public JsonResult getAdcpData(@PathVariable String startTime, @PathVariable String endTime) {
+        return ResultUtils.success(sensorDataService.getAdcpDataByTimeRange(startTime, endTime));
     }
 
     @RequestMapping(value = "/adcp/all", method = RequestMethod.GET)
@@ -35,15 +30,11 @@ public class SensorDataController {
         return ResultUtils.success(sensorDataService.getAllAdcpData());
     }
     
-    @RequestMapping(value = "/chaoweiyi", method = RequestMethod.GET)
+    @RequestMapping(value = "/chaoweiyi/{startTime}/{endTime}", method = RequestMethod.GET)
     public JsonResult getChaoweiyiData(
-            @RequestParam String station,
-            @RequestParam String startTime,
-            @RequestParam String endTime) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date start = sdf.parse(startTime);
-        Date end = sdf.parse(endTime);
-        return ResultUtils.success(sensorDataService.getChaoweiyiDataByStationAndTime(station, start, end));
+            @PathVariable String startTime,
+            @PathVariable String endTime) {
+        return ResultUtils.success(sensorDataService.getChaoweiyiDataByStationAndTime(startTime, endTime));
     }
 
     @RequestMapping(value = "/chaoweiyi/all", method = RequestMethod.GET)
@@ -51,14 +42,11 @@ public class SensorDataController {
         return ResultUtils.success(sensorDataService.getAllChaoweiyiData());
     }
     
-    @RequestMapping(value = "/luojing", method = RequestMethod.GET)
+    @RequestMapping(value = "/luojing/{startTime}/{endTime}", method = RequestMethod.GET)
     public JsonResult getLuojingData(
-            @RequestParam String startTime,
-            @RequestParam String endTime) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date start = sdf.parse(startTime);
-        Date end = sdf.parse(endTime);
-        return ResultUtils.success(sensorDataService.getLuojingDataByTimeRange(start, end));
+            @PathVariable String startTime,
+            @PathVariable String endTime) {
+        return ResultUtils.success(sensorDataService.getLuojingDataByTimeRange(startTime, endTime));
     }
 
     @RequestMapping(value = "/luojing/all", method = RequestMethod.GET)
@@ -66,14 +54,11 @@ public class SensorDataController {
         return ResultUtils.success(sensorDataService.getAllLuojingData());
     }
     
-    @RequestMapping(value = "/zhuoduyi", method = RequestMethod.GET)
+    @RequestMapping(value = "/zhuoduyi/{startTime}/{endTime}", method = RequestMethod.GET)
     public JsonResult getZhuoduyiData(
-            @RequestParam String startTime,
-            @RequestParam String endTime) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date start = sdf.parse(startTime);
-        Date end = sdf.parse(endTime);
-        return ResultUtils.success(sensorDataService.getZhuoduyiDataByTimeRange(start, end));
+            @PathVariable String startTime,
+            @PathVariable String endTime) {
+        return ResultUtils.success(sensorDataService.getZhuoduyiDataByTimeRange(startTime, endTime));
     }
 
     @RequestMapping(value = "/zhuoduyi/all", method = RequestMethod.GET)

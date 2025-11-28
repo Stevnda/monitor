@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface LuojingDataMapper {
-    List<SensorLuojing> getLuojingDataByTimeRange(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<SensorLuojing> getLuojingDataByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<SensorLuojing> getAllLuojingData();
 }

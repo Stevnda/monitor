@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.waterdata.WaterDataMapper">
+    <select id="getWaterDataByStationAndTimeRange" resultType="nnu.edu.back.pojo.WaterData">
+        SELECT *
+        FROM water_data
+        WHERE swzmc = #{stationName}
+          AND clsj BETWEEN #{startTime} AND #{endTime}
+        ORDER BY clsj
+    </select>
+</mapper>

@@ -1,5 +1,6 @@
 package nnu.edu.back.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import nnu.edu.back.dao.sensor.*;
 import nnu.edu.back.pojo.SensorAdcp;
 import nnu.edu.back.pojo.SensorChaoweiyi;
@@ -13,7 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class SensorServiceImpl implements SensorDataService{
+@Slf4j
+public class SensorServiceImpl implements SensorDataService {
     @Autowired
     private AdcpDataMapper adcpDataMapper;
 
@@ -27,7 +29,7 @@ public class SensorServiceImpl implements SensorDataService{
     private ZhuoduyiDataMapper zhuoduyiDataMapper;
 
     @Override
-    public List<SensorAdcp> getAdcpDataByTimeRange(Date startTime, Date endTime) {
+    public List<SensorAdcp> getAdcpDataByTimeRange(String startTime, String endTime) {
         return adcpDataMapper.getAdcpDataByTimeRange(startTime, endTime);
     }
 
@@ -37,8 +39,8 @@ public class SensorServiceImpl implements SensorDataService{
     }
     
     @Override
-    public List<SensorChaoweiyi> getChaoweiyiDataByStationAndTime(String station, Date startTime, Date endTime) {
-        return chaoweiyiDataMapper.getChaoweiyiDataByStationAndTime(station, startTime, endTime);
+    public List<SensorChaoweiyi> getChaoweiyiDataByStationAndTime(String startTime, String endTime) {
+        return chaoweiyiDataMapper.getChaoweiyiDataByTimeRange(startTime, endTime);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class SensorServiceImpl implements SensorDataService{
     }
     
     @Override
-    public List<SensorLuojing> getLuojingDataByTimeRange(Date startTime, Date endTime) {
+    public List<SensorLuojing> getLuojingDataByTimeRange(String startTime, String endTime) {
         return luojingDataMapper.getLuojingDataByTimeRange(startTime, endTime);
     }
 
@@ -57,7 +59,7 @@ public class SensorServiceImpl implements SensorDataService{
     }
     
     @Override
-    public List<SensorZhuoduyi> getZhuoduyiDataByTimeRange(Date startTime, Date endTime) {
+    public List<SensorZhuoduyi> getZhuoduyiDataByTimeRange(String startTime, String endTime) {
         return zhuoduyiDataMapper.getZhuoduyiDataByTimeRange(startTime, endTime);
     }
 

@@ -12,10 +12,10 @@
         <result property="turbidity" column="turbidity"/>
         <result property="depth" column="depth"/>
         <result property="ssc" column="ssc"/>
-        <result property="timestamp" column="timestamp" typeHandler="nnu.edu.back.common.utils.CustomDateTypeHandler"/>
+        <result property="timestamp" column="timestamp"/>
     </resultMap>
 
-    <select id="getZhuoduyiDataByTimeRange" resultType="nnu.edu.back.pojo.SensorZhuoduyi">
+    <select id="getZhuoduyiDataByTimeRange" resultMap="ZhuoduyiData">
         SELECT
             id,
             serial_number as serialNumber,
@@ -34,6 +34,21 @@
     </select>
 
     <select id="getAllZhuoduyiData" resultMap = "ZhuoduyiData">
-        SELECT * FROM zhuoduyi_data
+        SELECT 
+            id,
+            serial_number as serialNumber,
+            model,
+            internal_voltage as internalVoltage,
+            external_voltage as externalVoltage,
+            temperature,
+            pressure,
+            turbidity,
+            depth,
+            ssc,
+            CASE 
+                WHEN timestamp IS NULL OR timestamp = '' THEN NULL 
+                ELSE timestamp 
+            END as timestamp
+        FROM zhuoduyi_data
     </select>
 </mapper>

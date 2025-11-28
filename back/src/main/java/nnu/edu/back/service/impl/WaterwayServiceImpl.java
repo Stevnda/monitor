@@ -8,7 +8,9 @@ import nnu.edu.back.common.result.ResultEnum;
 import nnu.edu.back.common.utils.FileUtil;
 import nnu.edu.back.common.utils.InternetUtil;
 import nnu.edu.back.dao.map.MapMapper;
+import nnu.edu.back.dao.reception.ReceptionMapper;
 import nnu.edu.back.dao.ship.ShipMapper;
+import nnu.edu.back.dao.waterdata.WaterDataMapper;
 import nnu.edu.back.dao.waterway.WaterwayMapper;
 import nnu.edu.back.pojo.*;
 import nnu.edu.back.service.WaterwayService;
@@ -50,6 +52,12 @@ public class WaterwayServiceImpl implements WaterwayService {
 
     @Autowired
     MapMapper mapMapper;
+
+    @Autowired
+    ReceptionMapper receptionMapper;
+
+    @Autowired
+    WaterDataMapper waterDataMapper;
 
     @Value("${resourceDir}")
     String resourceDir;
@@ -191,6 +199,51 @@ public class WaterwayServiceImpl implements WaterwayService {
 
     @Override
     public JSONArray getWaterLevelByStationAndTime(String type, String station, String startTime, String endTime) {
+        //站点来源一：从内网水情数据库获取数据
+        String stcd = null;
+        if ("六滧".equals(station)) {
+            stcd = "60117840";
+        } else if ("连兴港".equals(station)) {
+            stcd = "60117820";
+        }
+        if (stcd != null) {
+            // 从reception数据库获取数据
+            List<Reception> dataList = receptionMapper.getByStcdAndTimeRange(stcd, startTime, endTime);
+            
+            // 转换为JSONArray格式返回
+            JSONArray result = new JSONArray();
+            for (Reception reception : dataList) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("stcd", reception.getStcd());
+                jsonObject.put("tm", reception.getTm());
+                jsonObject.put("tdz", reception.getTdz());
+                result.add(jsonObject);
+            }
+            return result;
+        }
+        
+        //站点来源二：从waterdata.db数据库获取数据
+        if ("丹华港".equals(station) || "白茆".equals(station) || "永钢".equals(station) || "太仓华能".equals(station)) {
+            List<WaterData> dataList = waterDataMapper.getWaterDataByStationAndTimeRange(station, startTime, endTime);
+            
+            // 转换为JSONArray格式返回
+            JSONArray result = new JSONArray();
+            for (WaterData waterData : dataList) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("swz_id", waterData.getSwz_id());
+                jsonObject.put("clsj", waterData.getClsj());
+                jsonObject.put("clsw", waterData.getClsw());
+                jsonObject.put("scsw", waterData.getScsw());
+                jsonObject.put("scsw56", waterData.getScsw56());
+                jsonObject.put("scswws", waterData.getScswws());
+                jsonObject.put("scswsd", waterData.getScswsd());
+                jsonObject.put("swzmc", waterData.getSwzmc());
+                result.add(jsonObject);
+            }
+            return result;
+        }
+
+        //站点来源三：从公网爬取的数据
         String prefix;
         if (type.equals("yangtze")) {
             prefix = "YangtzeDownstream";
@@ -205,14 +258,13 @@ public class WaterwayServiceImpl implements WaterwayService {
         } else {
             throw new MyException(ResultEnum.DEFAULT_EXCEPTION);
         }
-        System.out.println("1111111111111");
 
         try {
             String url = waterLevelAddress + "/" + prefix + "/getInfoByStationAndTime/" + station + "/" + startTime + "/" + endTime;
             url = InternetUtil.encodeSpaceChinese(url, "UTF-8");
 
-//            HttpEntity requestEntity = new HttpEntity(new HttpHeaders());
-//            JSONObject res = InternetUtil.httpHandle(url, requestEntity, JSONObject.class, "get");
+//          HttpEntity requestEntity = new HttpEntity(new HttpHeaders());
+//          JSONObject res = InternetUtil.httpHandle(url, requestEntity, JSONObject.class, "get");
             JSONObject res = InternetUtil.GetRealData(url);
             System.out.println(url);
             return res.getJSONArray("data");

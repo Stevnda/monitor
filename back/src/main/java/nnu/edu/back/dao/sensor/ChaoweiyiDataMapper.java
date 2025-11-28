@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ChaoweiyiDataMapper {
-    List<SensorChaoweiyi> getChaoweiyiDataByStationAndTime(@Param("station") String station, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<SensorChaoweiyi> getChaoweiyiDataByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<SensorChaoweiyi> getAllChaoweiyiData();
 }

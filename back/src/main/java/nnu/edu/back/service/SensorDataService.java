@@ -9,19 +9,19 @@ import java.util.Date;
 import java.util.List;
 
 public interface SensorDataService {
-    List<SensorAdcp> getAdcpDataByTimeRange(Date startTime, Date endTime);
+    List<SensorAdcp> getAdcpDataByTimeRange(String startTime, String endTime);
 
     List<SensorAdcp> getAllAdcpData();
     
-    List<SensorChaoweiyi> getChaoweiyiDataByStationAndTime(String station, Date startTime, Date endTime);
+    List<SensorChaoweiyi> getChaoweiyiDataByStationAndTime(String startTime, String endTime);
 
     List<SensorChaoweiyi> getAllChaoweiyiData();
     
-    List<SensorLuojing> getLuojingDataByTimeRange(Date startTime, Date endTime);
+    List<SensorLuojing> getLuojingDataByTimeRange(String startTime, String endTime);
 
     List<SensorLuojing> getAllLuojingData();
     
-    List<SensorZhuoduyi> getZhuoduyiDataByTimeRange(Date startTime, Date endTime);
+    List<SensorZhuoduyi> getZhuoduyiDataByTimeRange(String startTime, String endTime);
 
     List<SensorZhuoduyi> getAllZhuoduyiData();
 }

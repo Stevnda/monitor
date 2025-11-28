@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AdcpDataMapper {
-    List<SensorAdcp> getAdcpDataByTimeRange(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<SensorAdcp> getAdcpDataByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<SensorAdcp> getAllAdcpData();
 }

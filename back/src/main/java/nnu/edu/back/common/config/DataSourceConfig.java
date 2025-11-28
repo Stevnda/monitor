@@ -56,6 +56,14 @@ public class DataSourceConfig {
     @ConfigurationProperties("spring.datasource.sensor")
     public DataSource sensorSource() { return DataSourceBuilder.create().build(); }
 
+    @Bean("receptionSource")
+    @ConfigurationProperties("spring.datasource.reception")
+    public DataSource receptionSource() { return DataSourceBuilder.create().build(); }
+
+    @Bean("waterdataSource")
+    @ConfigurationProperties("spring.datasource.waterdata")
+    public DataSource waterdataSource() { return DataSourceBuilder.create().build(); }
+
     /**
      * 自定义动态数据源
      *
@@ -71,6 +79,8 @@ public class DataSourceConfig {
         dataSourceMap.put("ship", shipSource());
         dataSourceMap.put("map", mapSource());
         dataSourceMap.put("sensor", sensorSource());
+        dataSourceMap.put("reception", receptionSource());
+        dataSourceMap.put("waterdata", waterdataSource());
 
         // 默认数据源
         dynamicDataSource.setDefaultDataSource(defaultSource());

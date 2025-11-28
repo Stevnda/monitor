@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nnu.edu.back.dao.reception.ReceptionMapper">
+    <select id="getByStcdAndTimeRange" resultType="nnu.edu.back.pojo.Reception">
+        SELECT *
+        FROM tide
+        WHERE stcd = #{stcd}
+          AND tm BETWEEN #{startTime} AND #{endTime}
+        ORDER BY tm
+    </select>
+</mapper>

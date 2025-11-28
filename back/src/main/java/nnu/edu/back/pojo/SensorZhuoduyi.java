@@ -1,7 +1,6 @@
 package nnu.edu.back.pojo;
 
 import lombok.Data;
-import java.util.Date;
 
 @Data
 public class SensorZhuoduyi {
@@ -15,5 +14,5 @@ public class SensorZhuoduyi {
     private Double turbidity;
     private Double depth;
     private Double ssc;
-    private Date timestamp;
+    private String timestamp;
 }

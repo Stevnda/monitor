@@ -10,7 +10,8 @@
         <result property="deviceTimestamp" column="device_timestamp" typeHandler="nnu.edu.back.common.utils.CustomDateTypeHandler"/>
         <result property="createdAt" column="created_at" typeHandler="nnu.edu.back.common.utils.CustomDateTypeHandler"/>
     </resultMap>
-    <select id="getChaoweiyiDataByStationAndTime" resultMap="ChaoweiyiData">
+
+    <select id="getChaoweiyiDataByTimeRange" resultMap="ChaoweiyiData">
         SELECT 
             id,
             device_id as deviceId,
@@ -20,13 +21,19 @@
             device_timestamp as deviceTimestamp,
             created_at as createdAt
         FROM chaoweiyi_data
-        WHERE device_id = #{station}
-          AND device_timestamp &gt;= #{startTime}
+        WHERE device_timestamp &gt;= #{startTime}
           AND device_timestamp &lt;= #{endTime}
     </select>
 
     <select id="getAllChaoweiyiData" resultMap="ChaoweiyiData">
-        SELECT *
+        SELECT 
+            id,
+            device_id as deviceId,
+            type_id as typeId,
+            liquid_level as liquidLevel,
+            temperature,
+            device_timestamp as deviceTimestamp,
+            created_at as createdAt
         FROM chaoweiyi_data
     </select>
 </mapper>
