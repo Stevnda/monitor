@@ -1,11 +1,11 @@
 python:
   C:/Users/22171/.conda/envs/Env1/python.exe
 data:
-  D:/1study/Work/2023_12_22_Storm/StormPerdiction/data
+  E:\Graduate\graduate-1\workspace\monitor\StormPerdiction\data
 dataprocess:
-  D:/1study/Work/2023_12_22_Storm/StormPerdiction/data/DataProcess
+  E:\Graduate\graduate-1\workspace\monitor\StormPerdiction\data\DataProcess
 webdriver:
-  "D:/1tools/chromedriver/chromedriver.exe"
+  E:\Graduate\graduate-1\workspace\water_data\chromedriver.exe
 
 spring:
   datasource:
@@ -18,9 +18,14 @@ spring:
     meteorology:
       jdbc-url: jdbc:sqlite:${dataprocess}/Clawing/Meteorology.db
       driver-class-name: org.sqlite.JDBC
+    waterdata:
+      jdbc-url: jdbc:sqlite:${data}/waterdata/waterdata.db
+      driver-class-name: org.sqlite.JDBC
 
 stations:
   ${dataprocess}/station_service.json
+waterstations:
+  ${dataprocess}/waterdata/stations.json
 Typhoon:
   ${dataprocess}/Clawing/typhoon.json
 

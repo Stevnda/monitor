@@ -8,6 +8,7 @@ import nnu.edu.station.common.utils.FileUtil;
 import nnu.edu.station.common.utils.HttpUtil;
 import nnu.edu.station.common.utils.ListUtil;
 import nnu.edu.station.dao.level.LevelMapper;
+import nnu.edu.station.dao.level.WaterDataMapper;
 import nnu.edu.station.service.LevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,8 +37,14 @@ public class LevelServiceImpl implements LevelService {
     @Autowired
     LevelMapper levelMapper;
 
+    @Autowired
+    WaterDataMapper waterDataMapper;
+
     @Value("${stations}")
     String station_path;
+
+    @Value("${waterstations}")
+    String waterstation_path;
 
     private String getLocalTimeStr() {
         LocalDateTime time = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
@@ -58,9 +66,9 @@ public class LevelServiceImpl implements LevelService {
     @Override
     public JSONArray get72RealInfoByStation(String station) throws IOException {
         // 获取站点实测数据信息
-//        Path currentPath = Paths.get(System.getProperty("user.dir"));
-//        Path parentPath = currentPath.getParent();
-//        Path fullPath = currentPath.resolve(station_path);
+        // Path currentPath = Paths.get(System.getProperty("user.dir"));
+        // Path parentPath = currentPath.getParent();
+        // Path fullPath = currentPath.resolve(station_path);
         Path fullPath = Paths.get(station_path);
         JSONObject stations = FileUtil.readJsonObjectFile(fullPath.toString());
         // 处理json
@@ -68,18 +76,37 @@ public class LevelServiceImpl implements LevelService {
         String url_time = "";
         String url = "";
         String name = "";
+        boolean isOriginalStation = false;
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime threeDaysAgo = currentTime.minusDays(3);
+
         for (String key : keys) {
             if (key.equals(station)) {
                 url_time = stations.getJSONObject(key).getString("api_time");
                 name = stations.getJSONObject(key).getString("name");
+                isOriginalStation = true;
                 break;
             }
         }
+
+        if(!isOriginalStation){
+            Path waterStationPath = Paths.get(waterstation_path);
+            JSONObject waterStations = FileUtil.readJsonObjectFile(waterStationPath.toString());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            Set<String> waterkeys = waterStations.keySet();
+            for(String key : waterkeys){
+                if(key.equals(station)){
+                    List<Map<String, Object>> dataList = waterDataMapper.getWaterStationData( key, threeDaysAgo.format(formatter), currentTime.format(formatter));
+                    return ListUtil.waterDataProcessing(dataList);
+                }
+            }
+        }
+
         if (url_time == null) {
             return null;
         }
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime threeDaysAgo = currentTime.minusDays(3);
+
         JSONObject jsonResponse;
         if (name.equals("江阴") || name.equals("徐六泾") || name.equals("连兴港") || name.equals("六滧")){
             url = url_time + "/" + threeDaysAgo.atZone(ZoneOffset.UTC).toInstant().getEpochSecond()*1000 + "/" + currentTime.atZone(ZoneOffset.UTC).toInstant().getEpochSecond()*1000;
@@ -169,7 +196,7 @@ public class LevelServiceImpl implements LevelService {
 
     @Override
     public Map<String, Object> getNoTyph72ByStation(String station) {
-//        LocalDateTime time = LocalDateTime.now().withYear(2023).withMonth(8).withDayOfMonth(30).withHour(0).withMinute(0).withSecond(0).withNano(0);
+//       LocalDateTime time = LocalDateTime.now().withYear(2023).withMonth(8).withDayOfMonth(30).withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime time = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String time_str = time.format(formatter);

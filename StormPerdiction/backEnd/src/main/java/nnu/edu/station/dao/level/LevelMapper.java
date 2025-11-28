@@ -1,16 +1,13 @@
 package nnu.edu.station.dao.level;
 
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Repository
-@MapperScan
+
 public interface LevelMapper {
     List<Map<String, Object>> getAllInfoByStation(@Param("station") String station);
 

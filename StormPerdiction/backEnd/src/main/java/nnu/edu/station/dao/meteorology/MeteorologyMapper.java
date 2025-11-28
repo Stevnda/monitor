@@ -1,13 +1,13 @@
 package nnu.edu.station.dao.meteorology;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-@MapperScan
+
 public interface MeteorologyMapper {
     List<Object> getAll();
 

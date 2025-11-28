@@ -150,4 +150,37 @@ public class ListUtil {
         return realDataResultList;
     }
 
+    public static JSONArray waterDataProcessing(List<Map<String, Object>> dataList) {
+    // 处理水利站点数据
+    JSONArray result = new JSONArray();
+    for (Map<String, Object> data : dataList) {
+        JSONObject processedData = new JSONObject();
+
+        // 提取时间字段
+        Object clsj = data.get("clsj");
+        String time = clsj != null ? clsj.toString() : "";
+
+        // 提取水位数据，优先级：clsw > scsw > scsw56 > scswws > scswsd
+        String level = "";
+        if (data.get("clsw") != null && !data.get("clsw").toString().isEmpty()) {
+            level = data.get("clsw").toString();
+        } else if (data.get("scsw") != null && !data.get("scsw").toString().isEmpty()) {
+            level = data.get("scsw").toString();
+        } else if (data.get("scsw56") != null && !data.get("scsw56").toString().isEmpty()) {
+            level = data.get("scsw56").toString();
+        } else if (data.get("scswws") != null && !data.get("scswws").toString().isEmpty()) {
+            level = data.get("scswws").toString();
+        } else if (data.get("scswsd") != null && !data.get("scswsd").toString().isEmpty()) {
+            level = data.get("scswsd").toString();
+        }
+
+        processedData.put("time", time);
+        processedData.put("level", level);
+        result.add(processedData);
+    }
+    return result;
+}
+
+
+
 }
