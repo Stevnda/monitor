@@ -20,9 +20,14 @@ spring:
     meteorology:
       jdbc-url: jdbc:sqlite:${dataprocess}/Clawing/Meteorology.db
       driver-class-name: org.sqlite.JDBC
+    waterdata:
+      jdbc-url: jdbc:sqlite:${data}/waterdata/waterdata.db
+      driver-class-name: org.sqlite.JDBC
 
 stations:
   ${dataprocess}/station_service.json
+waterstations:
+  ${dataprocess}/waterdata/stations.json
 Typhoon:
   ${dataprocess}/Clawing/typhoon.json
 
