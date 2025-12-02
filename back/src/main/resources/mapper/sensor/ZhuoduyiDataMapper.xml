@@ -18,10 +18,10 @@
     <select id="getZhuoduyiDataByTimeRange" resultMap="ZhuoduyiData">
         SELECT
             id,
-            serial_number as serialNumber,
+            serial_number,
             model,
-            internal_voltage as internalVoltage,
-            external_voltage as externalVoltage,
+            internal_voltage,
+            external_voltage,
             temperature,
             pressure,
             turbidity,
@@ -36,19 +36,16 @@
     <select id="getAllZhuoduyiData" resultMap = "ZhuoduyiData">
         SELECT 
             id,
-            serial_number as serialNumber,
+            serial_number,
             model,
-            internal_voltage as internalVoltage,
-            external_voltage as externalVoltage,
+            internal_voltage,
+            external_voltage,
             temperature,
             pressure,
             turbidity,
             depth,
             ssc,
-            CASE 
-                WHEN timestamp IS NULL OR timestamp = '' THEN NULL 
-                ELSE timestamp 
-            END as timestamp
+            timestamp
         FROM zhuoduyi_data
     </select>
 </mapper>

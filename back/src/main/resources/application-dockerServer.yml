@@ -17,6 +17,15 @@ spring:
     map:
       jdbc-url: jdbc:sqlite:/usr/local/resource/monitor_resource/map.db
       driver-class-name: org.sqlite.JDBC
+    sensor:
+      jdbc-url: jdbc:sqlite:
+      driver-class-name: org.sqlite.JDBC
+    reception:
+      jdbc-url: jdbc:sqlite:
+      driver-class-name: org.sqlite.JDBC
+    waterdata:
+      jdbc-url: jdbc:sqlite:
+      driver-class-name: org.sqlite.JDBC
 
 #D:/UyNauhL/Assignments/monitor_data/monitor
 

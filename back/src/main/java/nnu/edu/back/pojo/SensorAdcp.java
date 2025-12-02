@@ -6,7 +6,7 @@ import java.util.Date;
 @Data
 public class SensorAdcp {
     private Long id;
-    private Date deviceTimestamp;
+    private String deviceTimestamp;
     private String headerData;
     private String fixedLeader;
     private String variableLeader;

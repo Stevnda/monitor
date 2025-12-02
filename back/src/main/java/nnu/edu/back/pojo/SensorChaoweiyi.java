@@ -11,6 +11,6 @@ public class SensorChaoweiyi {
     private Integer typeId;
     private Double liquidLevel;
     private Double temperature;
-    private Date deviceTimestamp;
-    private Date createdAt;
+    private String deviceTimestamp;
+    private String createdAt;
 }

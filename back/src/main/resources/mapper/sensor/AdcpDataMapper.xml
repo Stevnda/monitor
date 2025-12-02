@@ -3,7 +3,7 @@
 <mapper namespace="nnu.edu.back.dao.sensor.AdcpDataMapper">
     <resultMap id="AdcpData" type="nnu.edu.back.pojo.SensorAdcp">
         <id property="id" column="id"/>
-        <result property="deviceTimestamp" column="timestamp" typeHandler="nnu.edu.back.common.utils.CustomDateTypeHandler"/>
+        <result property="deviceTimestamp" column="timestamp"/>
         <result property="headerData" column="header_data"/>
         <result property="fixedLeader" column="fixed_leader"/>
         <result property="variableLeader" column="variable_leader"/>
@@ -18,21 +18,21 @@
         <result property="checksum" column="checksum"/>
     </resultMap>
 
-    <select id="getAdcpDataByTimeRange" resultType="nnu.edu.back.pojo.SensorAdcp">
+    <select id="getAdcpDataByTimeRange" resultMap="AdcpData">
         SELECT
             id,
-            timestamp as deviceTimestamp,
-            header_data as headerData,
-            fixed_leader as fixedLeader,
-            variable_leader as variableLeader,
-            velocity_data as velocityData,
-            correlation_data as correlationData,
-            echo_intensity as echoIntensity,
-            percent_good as percentGood,
-            status_data as statusData,
-            bottom_track as bottomTrack,
-            ambient_sound as ambientSound,
-            ism_data as ismData,
+            timestamp,
+            header_data,
+            fixed_leader,
+            variable_leader,
+            velocity_data,
+            correlation_data,
+            echo_intensity,
+            percent_good,
+            status_data,
+            bottom_track,
+            ambient_sound,
+            ism_data,
             checksum
         FROM adcp_data
         WHERE timestamp &gt;= #{startTime}
@@ -40,6 +40,21 @@
     </select>
 
     <select id="getAllAdcpData" resultMap="AdcpData">
-        SELECT * FROM adcp_data
+        SELECT 
+            id,
+            timestamp,
+            header_data,
+            fixed_leader,
+            variable_leader,
+            velocity_data,
+            correlation_data,
+            echo_intensity,
+            percent_good,
+            status_data,
+            bottom_track,
+            ambient_sound,
+            ism_data,
+            checksum
+        FROM adcp_data
     </select>
 </mapper>

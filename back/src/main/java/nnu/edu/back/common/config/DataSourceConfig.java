@@ -98,8 +98,6 @@ public class DataSourceConfig {
         // 开启驼峰转下划线设置
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setMapUnderscoreToCamelCase(true);
-        // 注册自定义类型处理器
-        configuration.getTypeHandlerRegistry().register(nnu.edu.back.common.utils.CustomDateTypeHandler.class);
         sessionFactory.setConfiguration(configuration);
         // 实体、Mapper类映射
 //        sessionFactory.setTypeAliasesPackage(typeAliasesPackage);

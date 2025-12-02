@@ -3,34 +3,43 @@
 <mapper namespace="nnu.edu.back.dao.sensor.LuojingDataMapper">
     <resultMap id="LuojingData" type="nnu.edu.back.pojo.SensorLuojing">
         <id property="id" column="id"/>
-        <result property="timestamp" column="timestamp" typeHandler="nnu.edu.back.common.utils.CustomDateTypeHandler"/>
+        <result property="timestamp" column="timestamp"/>
         <result property="ggaData" column="gga_data"/>
         <result property="hdtData" column="hdt_data"/>
         <result property="vtgData" column="vtg_data"/>
         <result property="gpsSatellites" column="gps_satellites"/>
         <result property="glonassSatellites" column="glonass_satellites"/>
         <result property="beidouSatellites" column="beidou_satellites"/>
-        <result property="createdAt" column="created_at" typeHandler="nnu.edu.back.common.utils.CustomDateTypeHandler"/>
+        <result property="createdAt" column="created_at"/>
     </resultMap>
 
     <select id="getLuojingDataByTimeRange" resultMap = "LuojingData">
         SELECT
             id,
             timestamp,
-            gga_data as ggaData,
-            hdt_data as hdtData,
-            vtg_data as vtgData,
-            gps_satellites as gpsSatellites,
-            glonass_satellites as glonassSatellites,
-            beidou_satellites as beidouSatellites,
-            created_at as createdAt
+            gga_data,
+            hdt_data,
+            vtg_data,
+            gps_satellites,
+            glonass_satellites,
+            beidou_satellites,
+            created_at
         FROM luojing_data
         WHERE timestamp  &gt;= #{startTime}
           AND timestamp &lt;= #{endTime}
     </select>
 
     <select id="getAllLuojingData" resultMap="LuojingData">
-        SELECT *
+        SELECT 
+            id,
+            timestamp,
+            gga_data,
+            hdt_data,
+            vtg_data,
+            gps_satellites,
+            glonass_satellites,
+            beidou_satellites,
+            created_at
         FROM luojing_data
     </select>
 </mapper>
