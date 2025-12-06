@@ -85,7 +85,7 @@ public class TimeTask {
     }
 
     @Scheduled(
-            cron = "0 30 0 * * ?"
+            cron = "0 30 10 * * ?"
     )
     public void executePythonUpdateData() {
         UpdateUtil.DataUpdating(this.python, this.updateData, this.dataprocess);
