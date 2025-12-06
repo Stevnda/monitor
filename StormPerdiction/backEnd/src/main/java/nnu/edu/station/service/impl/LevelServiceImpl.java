@@ -2,8 +2,6 @@ package nnu.edu.station.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import nnu.edu.station.common.utils.FileUtil;
 import nnu.edu.station.common.utils.HttpUtil;
 import nnu.edu.station.common.utils.ListUtil;
@@ -13,26 +11,18 @@ import nnu.edu.station.service.LevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+
 import java.util.*;
 
 @Service
 public class LevelServiceImpl implements LevelService {
-
-    // V1 Service
 
     @Autowired
     LevelMapper levelMapper;
