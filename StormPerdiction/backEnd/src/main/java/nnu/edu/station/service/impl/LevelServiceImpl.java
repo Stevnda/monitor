@@ -1,5 +1,4 @@
 package nnu.edu.station.service.impl;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import nnu.edu.station.common.utils.FileUtil;
@@ -166,33 +165,31 @@ public class LevelServiceImpl implements LevelService {
 
     @Override
     public Map<String, Object> get72ByStation(String station) {
-//        LocalDateTime time = LocalDateTime.now().withYear(2023).withMonth(8).withDayOfMonth(30).withHour(0).withMinute(0).withSecond(0).withNano(0);
         Integer ifTyph = ifTyph(getLocalTimeStr());
         // 若当天数据未更新，则获取前一天的数据
         if (ifTyph == null) {
             ifTyph = ifTyph(getLocalTimeBeforeStr(1));
         }
-        try{
-            if ( ifTyph == 1){
+        if (ifTyph == null) {
+            return getNoTyph72ByStation(station);
+        } else {
+            if (ifTyph == 1) {
                 return getTyph72ByStation(station);
             } else {
+                // 其余情况均视为无台风
                 return getNoTyph72ByStation(station);
             }
-        } catch ( Exception e){
-            Map<String, Object> obj = new HashMap<>();
-            return obj;
         }
     }
 
     @Override
     public Map<String, Object> getNoTyph72ByStation(String station) {
-//       LocalDateTime time = LocalDateTime.now().withYear(2023).withMonth(8).withDayOfMonth(30).withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime time = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String time_str = time.format(formatter);
         try{
             Map<String, Object> obj = levelMapper.getNoTyph72ByStation(station, time_str);
-            if ( obj == null ) {
+            if (obj == null) {
                 time_str = time.minusDays(1).format(formatter);
                 obj = levelMapper.getNoTyph72ByStation(station, time_str);
             }
@@ -200,8 +197,7 @@ public class LevelServiceImpl implements LevelService {
             return ListUtil.StringObj2ArrayObj(obj);
         }
         catch ( Exception e ) {
-            Map<String, Object> obj = new HashMap<>();
-            return obj;
+            return new HashMap<>();
         }
     }
 

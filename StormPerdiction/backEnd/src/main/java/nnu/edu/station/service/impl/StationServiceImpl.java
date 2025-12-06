@@ -58,9 +58,8 @@ public class StationServiceImpl implements StationService {
         JSONObject stations = FileUtil.readJsonObjectFile(fullPath.toString());
         Set<String> keys = stations.keySet();
         for (String key : keys) {
-            String TodayStation = key.toString();
-            if (getStationByNameAndTime(TodayStation) != null) {
-                TodayStations.add(TodayStation);
+            if (getStationByNameAndTime(key) != null) {
+                TodayStations.add(key);
             }
         }
         return TodayStations;
@@ -75,9 +74,8 @@ public class StationServiceImpl implements StationService {
         JSONObject stations = FileUtil.readJsonObjectFile(fullPath.toString());
         Set<String> keys = stations.keySet();
         for (String key : keys) {
-            String TodayStation = key.toString();
-            if (getStationByNameTimeAndField(TodayStation, "hpre") != null) {
-                TodayStations.add(TodayStation);
+            if (getStationByNameTimeAndField(key, "hpre") != null) {
+                TodayStations.add(key);
             }
         }
         return TodayStations;
@@ -92,9 +90,8 @@ public class StationServiceImpl implements StationService {
         JSONObject stations = FileUtil.readJsonObjectFile(fullPath.toString());
         Set<String> keys = stations.keySet();
         for (String key : keys) {
-            String TodayStation = key.toString();
-            if (getStationByNameTimeAndField(TodayStation, "hshice") != null) {
-                TodayStations.add(TodayStation);
+            if (getStationByNameTimeAndField(key, "hshice") != null) {
+                TodayStations.add(key);
             }
         }
         return TodayStations;
