@@ -88,14 +88,34 @@ public class TimeTask {
             cron = "0 30 10 * * ?"
     )
     public void executePythonUpdateData() {
-        UpdateUtil.DataUpdating(this.python, this.updateData, this.dataprocess);
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(this.logPath, true));
+            writer.println("Log message: Data updating task started at " + LocalDateTime.now());
+            writer.close();
+            UpdateUtil.DataUpdating(this.python, this.updateData, this.dataprocess);
+            writer = new PrintWriter(new FileWriter(this.logPath, true));
+            writer.println("Log message: Data updating task finished at " + LocalDateTime.now());
+            writer.close();
+        } catch (IOException e) {
+            log.error("Failed to write log to file", e);
+        }
     }
 
     @Scheduled(
             cron = "01 00 0/3 * * ?"
     )
     public void executePythonUpdateManData() {
-        UpdateUtil.ManuelDataUpdating(this.python, this.updateManData, this.dataprocess);
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(this.logPath, true));
+            writer.println("Log message: Manual data updating task started at " + LocalDateTime.now());
+            writer.close();
+            UpdateUtil.ManuelDataUpdating(this.python, this.updateManData, this.dataprocess);
+            writer = new PrintWriter(new FileWriter(this.logPath, true));
+            writer.println("Log message: Manual data updating task finished at " + LocalDateTime.now());
+            writer.close();
+        } catch (IOException e) {
+            log.error("Failed to write log to file", e);
+        }
     }
 
     @Scheduled(

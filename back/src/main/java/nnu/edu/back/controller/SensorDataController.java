@@ -37,6 +37,14 @@ public class SensorDataController {
         return ResultUtils.success(sensorDataService.getChaoweiyiDataByStationAndTime(startTime, endTime));
     }
 
+    @RequestMapping(value = "/chaoweiyi2/{startTime}/{endTime}", method = RequestMethod.GET)
+    public JsonResult getChaoweiyi2Data(
+            @PathVariable String startTime,
+            @PathVariable String endTime) {
+        return ResultUtils.success(sensorDataService.getChaoweiyi2DataByStationAndTime(startTime, endTime));
+    }
+
+
     @RequestMapping(value = "/chaoweiyi/all", method = RequestMethod.GET)
     public JsonResult getAllChaoweiyiData() {
         return ResultUtils.success(sensorDataService.getAllChaoweiyiData());

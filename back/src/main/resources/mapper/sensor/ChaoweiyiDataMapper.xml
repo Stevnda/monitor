@@ -10,17 +10,36 @@
         <result property="deviceTimestamp" column="device_timestamp"/>
         <result property="createdAt" column="created_at"/>
     </resultMap>
+    <resultMap id="Chaoweiyi2Data" type="nnu.edu.back.pojo.SensorChaoweiyi2">
+        <id property="id" column="id"/>
+        <result property="sw" column="sw"/>
+        <result property="wd" column="wd"/>
+        <result property="deviceTimestamp" column="device_timestamp"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
 
     <select id="getChaoweiyiDataByTimeRange" resultMap="ChaoweiyiData">
         SELECT 
             id,
             device_id,
             type_id,
-            liquid_level,
+            liquid_level + 0.03 - 1.93 AS liquid_level,
             temperature,
             device_timestamp,
             created_at
         FROM chaoweiyi_data
+        WHERE device_timestamp &gt;= #{startTime}
+          AND device_timestamp &lt;= #{endTime}
+    </select>
+
+    <select id="getChaoweiyi2DataByTimeRange" resultMap="Chaoweiyi2Data">
+        SELECT
+            id,
+            sw/100 - 0.24 - 2.09 AS sw,
+            wd,
+            device_timestamp,
+            created_at
+        FROM chaoweiyi2_data
         WHERE device_timestamp &gt;= #{startTime}
           AND device_timestamp &lt;= #{endTime}
     </select>

@@ -2,14 +2,12 @@ package nnu.edu.back.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import nnu.edu.back.dao.sensor.*;
-import nnu.edu.back.pojo.SensorAdcp;
-import nnu.edu.back.pojo.SensorChaoweiyi;
-import nnu.edu.back.pojo.SensorLuojing;
-import nnu.edu.back.pojo.SensorZhuoduyi;
+import nnu.edu.back.pojo.*;
 import nnu.edu.back.service.SensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +39,11 @@ public class SensorServiceImpl implements SensorDataService {
     @Override
     public List<SensorChaoweiyi> getChaoweiyiDataByStationAndTime(String startTime, String endTime) {
         return chaoweiyiDataMapper.getChaoweiyiDataByTimeRange(startTime, endTime);
+    }
+
+    @Override
+    public List<SensorChaoweiyi2> getChaoweiyi2DataByStationAndTime(String startTime, String endTime) {
+        return chaoweiyiDataMapper.getChaoweiyi2DataByTimeRange(startTime, endTime);
     }
 
     @Override
