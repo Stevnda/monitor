@@ -66,19 +66,19 @@ public class ProcessUtil {
 
     public static void run(String cmdString, String taskName) {
         try {
-            ProcessUtil.log.info(taskName + " scheduled at " + LocalDateTime.now());
+            ProcessUtil.log.info("{} scheduled at {}", taskName, LocalDateTime.now());
             Process process = ProcessUtil.exeProcess(cmdString);
             ProcessCmdOutput processCmdOutput = ProcessUtil.readProcessOutput(process.getInputStream());
             ProcessUtil.log.info(processCmdOutput.toString());
             if (processCmdOutput.getStatusCode() == 0) {
-                ProcessUtil.log.info(taskName + " execution failed!");
+                ProcessUtil.log.info("{} execution failed!", taskName);
             }
             int code = process.waitFor();
             process.destroy();
             if (code == 0) {
-                ProcessUtil.log.info(taskName + " execution successfully!");
+                ProcessUtil.log.info("{} execution successfully!", taskName);
             } else {
-                ProcessUtil.log.info(taskName + " execution ended not normally!");
+                ProcessUtil.log.info("{} execution ended not normally!", taskName);
             }
 
         } catch (InterruptedException | IOException var4) {

@@ -1,6 +1,7 @@
 package nnu.edu.station.service.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import nnu.edu.station.common.config.TimeTask;
 import nnu.edu.station.common.utils.FileUtil;
 import nnu.edu.station.common.utils.HttpUtil;
 import nnu.edu.station.common.utils.ListUtil;
@@ -28,6 +29,9 @@ public class LevelServiceImpl implements LevelService {
 
     @Autowired
     WaterDataMapper waterDataMapper;
+
+    @Autowired
+    TimeTask timeTask;
 
     @Value("${stations}")
     String station_path;
@@ -173,14 +177,15 @@ public class LevelServiceImpl implements LevelService {
             ifTyph = ifTyph(getLocalTimeBeforeStr(1));
         }
         if (ifTyph == null) {
-            return getNoTyph72ByStation(station);
+            // 如果仍没有数据，则触发手动更新
+            timeTask.executePythonUpdateData();
+            ifTyph = ifTyph(getLocalTimeStr());
+        }
+        if (ifTyph == 1) {
+            return getTyph72ByStation(station);
         } else {
-            if (ifTyph == 1) {
-                return getTyph72ByStation(station);
-            } else {
-                // 其余情况均视为无台风
-                return getNoTyph72ByStation(station);
-            }
+            // 其余情况均视为无台风
+            return getNoTyph72ByStation(station);
         }
     }
 
@@ -252,6 +257,14 @@ public class LevelServiceImpl implements LevelService {
         if (obj == null) {
             localTime = getLocalTimeBeforeStr(1);
             obj = ListUtil.StringObj2ArrayObj(levelMapper.get48scNotyNoman(station, localTime));
+            // 如果仍没有数据，则触发手动更新
+            if (obj == null) {
+                timeTask.executePythonUpdateData();
+                localTime = getLocalTimeStr();
+                obj = ListUtil.StringObj2ArrayObj(levelMapper.get48ybNotyNoman(station, localTime));
+                obj.put("time",getLocalTimeBeforeStr(2));
+                return obj;
+            }
             obj.put("time",getLocalTimeBeforeStr(3));
             return obj;
         }
@@ -266,6 +279,14 @@ public class LevelServiceImpl implements LevelService {
         if (obj == null) {
             localTime = getLocalTimeBeforeStr(1);
             obj = ListUtil.StringObj2ArrayObj(levelMapper.get48ybNotyNoman(station, localTime));
+            // 如果仍没有数据，则触发手动更新
+            if (obj == null) {
+                timeTask.executePythonUpdateData();
+                localTime = getLocalTimeStr();
+                obj = ListUtil.StringObj2ArrayObj(levelMapper.get48ybNotyNoman(station, localTime));
+                obj.put("time",getLocalTimeBeforeStr(2));
+                return obj;
+            }
             obj.put("time",getLocalTimeBeforeStr(3));
             return obj;
         }

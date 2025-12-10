@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import nnu.edu.station.common.utils.ClawingUtil;
 import nnu.edu.station.common.utils.FieldUtil;
 import nnu.edu.station.common.utils.UpdateUtil;
+import nnu.edu.station.dao.level.LevelMapper;
 import nnu.edu.station.service.LevelService;
 import nnu.edu.station.service.NCService;
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public class TimeTask {
     @Value("${DataProcessLog}")
     String logPath;
     @Autowired
-    LevelService levelService;
+    LevelMapper levelMapper;
     @Autowired
     NCService ncService;
 
@@ -85,7 +86,7 @@ public class TimeTask {
     }
 
     @Scheduled(
-            cron = "0 30 10 * * ?"
+            cron = "0 0 * * * ?"
     )
     public void executePythonUpdateData() {
         try {
@@ -160,7 +161,7 @@ public class TimeTask {
         LocalDateTime time = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String time_str = time.format(formatter);
-        Integer iftyph = this.levelService.ifTyph(time_str);
+        Integer iftyph = this.levelMapper.ifTyph(time_str);
         String acdirc_path = '"' + this.ncService.getPathByTimeAndType(time_str, "adcirc") + '"';
         String fort_path = '"' + this.ncService.getPathByTimeAndType(time_str, "fort63") + '"';
         FieldUtil.executePythonCalculateWaterLevel(this.python, this.waterLevelCalculating, acdirc_path, this.WaterLevel, this.waterLevelPoints);
