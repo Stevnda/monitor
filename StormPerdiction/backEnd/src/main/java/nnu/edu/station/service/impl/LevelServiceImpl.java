@@ -176,11 +176,6 @@ public class LevelServiceImpl implements LevelService {
         if (ifTyph == null) {
             ifTyph = ifTyph(getLocalTimeBeforeStr(1));
         }
-        if (ifTyph == null) {
-            // 如果仍没有数据，则触发手动更新
-            timeTask.executePythonUpdateData();
-            ifTyph = ifTyph(getLocalTimeStr());
-        }
         if (ifTyph == 1) {
             return getTyph72ByStation(station);
         } else {
@@ -229,8 +224,7 @@ public class LevelServiceImpl implements LevelService {
             obj.put("time",time_str);
             return obj;
         } catch (Exception e) {
-            Map<String, Object> obj = new HashMap<>();
-            return obj;
+            return new HashMap<>();
         }
     }
 
@@ -257,14 +251,6 @@ public class LevelServiceImpl implements LevelService {
         if (obj == null) {
             localTime = getLocalTimeBeforeStr(1);
             obj = ListUtil.StringObj2ArrayObj(levelMapper.get48scNotyNoman(station, localTime));
-            // 如果仍没有数据，则触发手动更新
-            if (obj == null) {
-                timeTask.executePythonUpdateData();
-                localTime = getLocalTimeStr();
-                obj = ListUtil.StringObj2ArrayObj(levelMapper.get48ybNotyNoman(station, localTime));
-                obj.put("time",getLocalTimeBeforeStr(2));
-                return obj;
-            }
             obj.put("time",getLocalTimeBeforeStr(3));
             return obj;
         }
@@ -279,14 +265,6 @@ public class LevelServiceImpl implements LevelService {
         if (obj == null) {
             localTime = getLocalTimeBeforeStr(1);
             obj = ListUtil.StringObj2ArrayObj(levelMapper.get48ybNotyNoman(station, localTime));
-            // 如果仍没有数据，则触发手动更新
-            if (obj == null) {
-                timeTask.executePythonUpdateData();
-                localTime = getLocalTimeStr();
-                obj = ListUtil.StringObj2ArrayObj(levelMapper.get48ybNotyNoman(station, localTime));
-                obj.put("time",getLocalTimeBeforeStr(2));
-                return obj;
-            }
             obj.put("time",getLocalTimeBeforeStr(3));
             return obj;
         }

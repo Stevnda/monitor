@@ -86,7 +86,7 @@ public class TimeTask {
     }
 
     @Scheduled(
-            cron = "0 0 * * * ?"
+            cron = "0 15 2 * * ?"
     )
     public void executePythonUpdateData() {
         try {
