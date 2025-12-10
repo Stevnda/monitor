@@ -35,7 +35,7 @@
     <select id="getChaoweiyi2DataByTimeRange" resultMap="Chaoweiyi2Data">
         SELECT
             id,
-            sw/100 - 0.24 - 2.09 AS sw,
+            sw/10 - 0.24 - 2.09 AS sw,
             wd,
             device_timestamp,
             created_at
