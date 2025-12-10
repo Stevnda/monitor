@@ -1,6 +1,5 @@
-package nnu.edu.station.dao.level;
+package nnu.edu.station.dao.waterdata;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

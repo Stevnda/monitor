@@ -5,7 +5,7 @@ import nnu.edu.station.common.utils.FileUtil;
 import nnu.edu.station.common.utils.HttpUtil;
 import nnu.edu.station.common.utils.ListUtil;
 import nnu.edu.station.dao.level.LevelMapper;
-import nnu.edu.station.dao.level.WaterDataMapper;
+import nnu.edu.station.dao.waterdata.WaterDataMapper;
 import nnu.edu.station.service.LevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,16 +79,18 @@ public class LevelServiceImpl implements LevelService {
         }
 
         if(!isOriginalStation){
-            Path waterStationPath = Paths.get(waterstation_path);
-            JSONObject waterStations = FileUtil.readJsonObjectFile(waterStationPath.toString());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-            Set<String> waterkeys = waterStations.keySet();
-            for(String key : waterkeys){
-                if(key.equals(station)){
-                    List<Map<String, Object>> dataList = waterDataMapper.getWaterStationData( key, threeDaysAgo.format(formatter), currentTime.format(formatter));
-                    return ListUtil.waterDataProcessing(dataList);
-                }
+            // 仅对特定站点(danhuagang、yonggang、baimao、taicanghuaneng)调用waterDataMapper
+            Map<String, String> specialStations = new HashMap<>();
+            specialStations.put("danhuagang", "丹华港");
+            specialStations.put("yonggang", "永钢");
+            specialStations.put("baimao", "白茆");
+            specialStations.put("taicanghuaneng", "太仓华能");
+            
+            if(specialStations.containsKey(station)){
+                String chineseStationName = specialStations.get(station);
+                List<Map<String, Object>> dataList = waterDataMapper.getWaterStationData(chineseStationName, threeDaysAgo.format(formatter), currentTime.format(formatter));
+                return ListUtil.waterDataProcessing(dataList);
             }
         }
 
