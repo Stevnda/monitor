@@ -2,7 +2,7 @@ server:
   port: 8700
 spring:
   profiles:
-    active: dev
+    active: dockerServer
   servlet:
     multipart:
       enabled: true

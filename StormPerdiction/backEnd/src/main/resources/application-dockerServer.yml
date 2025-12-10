@@ -21,7 +21,7 @@ spring:
       jdbc-url: jdbc:sqlite:${dataprocess}/Clawing/Meteorology.db
       driver-class-name: org.sqlite.JDBC
     waterdata:
-      jdbc-url: jdbc:sqlite:/usr/local/water/newReceptionService/data/waterdata.db
+      jdbc-url: jdbc:sqlite:${data}/water/newReceptionService/data/waterdata.db
       driver-class-name: org.sqlite.JDBC
 
 stations:

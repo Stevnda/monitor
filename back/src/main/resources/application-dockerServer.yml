@@ -18,13 +18,13 @@ spring:
       jdbc-url: jdbc:sqlite:/usr/local/resource/monitor_resource/map.db
       driver-class-name: org.sqlite.JDBC
     sensor:
-      jdbc-url: jdbc:sqlite:/usr/local/codes/Instrument/sensor_data.db
+      jdbc-url: jdbc:sqlite:/usr/local/resource/StormData/Instrument/sensor_data.db
       driver-class-name: org.sqlite.JDBC
     reception:
-      jdbc-url: jdbc:sqlite:/usr/local/water/reception.db
+      jdbc-url: jdbc:sqlite:/usr/local/resource/StormData/water/reception.db
       driver-class-name: org.sqlite.JDBC
     waterdata:
-      jdbc-url: jdbc:sqlite:/usr/local/water/newReceptionService/data/waterdata.db
+      jdbc-url: jdbc:sqlite:/usr/local/resource/StormData/water/newReceptionService/data/waterdata.db
       driver-class-name: org.sqlite.JDBC
 
 #D:/UyNauhL/Assignments/monitor_data/monitor
